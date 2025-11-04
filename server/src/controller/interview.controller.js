@@ -2,12 +2,12 @@ import Interview from "../models/interview.model.js";
 
 export const createInterview = async (req, res) => {
   try {
-    const {role, tag, location, companyName} = req.body;
+    const {role, tag, location, companyName,salary} = req.body;
     const userId = req.userId; 
-    if (!role || !location || !companyName) {
-      return res.status(400).json({ message: "Role, location, and companyName are required" });
+    if (!role || !location || !companyName || !salary) {
+      return res.status(400).json({ message: "Role, location, companyName, and salary are required" });
     }
-    const newInterview = new Interview({ userId, role, tag, location, companyName });
+    const newInterview = new Interview({ userId, role, tag, location, companyName, salary });
     await newInterview.save();
     res.status(201).json(newInterview);
   } catch (error) {
@@ -41,6 +41,7 @@ export const getInterviewById = async (req, res) => {
     res.status(500).json({ message: "Error fetching interview", error });
   }
 };
+
 
 export const deleteInterview = async (req, res) => {
   try {

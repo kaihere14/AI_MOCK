@@ -86,7 +86,7 @@ const Sidebar = () => {
           <button
             onClick={() => {
               updateActiveItem("Interviews");
-              navigate("/about");
+              navigate("/interviews");
             }}
             className={`w-full flex items-center cursor-pointer gap-3 px-3 py-3 rounded-lg mb-1 transition-colors ${
               activeItem === "Interviews"
