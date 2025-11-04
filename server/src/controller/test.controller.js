@@ -100,3 +100,15 @@ export const finalizeTest = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 }
+
+export const getTestResults = async (req, res) => {
+    const userId = req.userId;
+
+    try {
+        const results = await testResult.find({ userId });
+        res.status(200).json(results);
+    } catch (error) {
+        console.error("Error fetching test results:", error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+} 
