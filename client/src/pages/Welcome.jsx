@@ -19,12 +19,14 @@ const Welcome = () => {
   const { isLoggedIn } = useAppContext();
 
   useEffect(() => {
-    // Check if user is already logged in
+    // Check if user is already logged in and has valid tokens
+    const accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
 
-    if (isLoggedIn) {
-      navigate("/");
+    if (isLoggedIn && (accessToken || refreshToken)) {
+      navigate("/", { replace: true });
     }
-  }, [navigate]);
+  }, [isLoggedIn, navigate]);
 
   const features = [
     {
