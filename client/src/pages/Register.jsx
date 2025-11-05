@@ -1,19 +1,21 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, User } from "lucide-react";
 import axios from "axios";
 import { useAppContext } from "../context/AppContext";
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
-  const { setUser } = useAppContext();
+  const { setUser,setIsLoggedIn ,setActiveItem } = useAppContext();
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -25,36 +27,49 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setIsLoading(true);
+
+    // Validation
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/users/login`,
-        formData
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/register`,
+        {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }
       );
       console.log(response.data);
 
-      // Set default avatar if user doesn't have one
+      // Set tokens and user data
       localStorage.setItem("accessToken", response.data.accessToken);
       localStorage.setItem("refreshToken", response.data.refreshToken);
       const userData = {
-        ...response.data.returnUser,
+        ...response.data.newUser,
         avatar:
-          response.data.returnUser.avatar ||
           "https://api.dicebear.com/9.x/avataaars/svg?seed=DefaultUser&backgroundColor=b6e3f4",
       };
 
       setUser(userData);
+      localStorage.setItem("accessToken", response.data.accessToken);
+      localStorage.setItem("refreshToken", response.data.refreshToken);
+      setIsLoggedIn(true);
+      setActiveItem("Dashboard");
       navigate("/");
     } catch (err) {
-      console.error("Login error:", err);
+      console.error("Registration error:", err);
       setError(
-        err.response?.data?.message ||
-          "Login failed. Please check your credentials and try again."
+        err.response?.data?.message || "Registration failed. Please try again."
       );
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -66,7 +81,7 @@ const Login = () => {
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
       </div>
 
-      {/* Login Card */}
+      {/* Register Card */}
       <div className="relative w-full max-w-md">
         {/* Logo */}
         <div className="flex items-center justify-center gap-3 mb-8">
@@ -81,9 +96,11 @@ const Login = () => {
         {/* Card */}
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 shadow-2xl">
           <div className="mb-6">
-            <h2 className="text-2xl font-bold text-white mb-2">Welcome Back</h2>
+            <h2 className="text-2xl font-bold text-white mb-2">
+              Create Account
+            </h2>
             <p className="text-gray-400 text-sm">
-              Sign in to continue to your dashboard
+              Sign up to start your interview preparation
             </p>
           </div>
 
@@ -94,6 +111,29 @@ const Login = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Name Input */}
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-300 mb-2"
+              >
+                Full Name
+              </label>
+              <div className="relative">
+                <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Enter your full name"
+                  required
+                  className="w-full pl-12 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
+                />
+              </div>
+            </div>
+
             {/* Email Input */}
             <div>
               <label
@@ -111,6 +151,7 @@ const Login = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="Enter your email"
+                  required
                   className="w-full pl-12 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
                 />
               </div>
@@ -132,7 +173,8 @@ const Login = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Enter your password"
+                  placeholder="Create a password"
+                  required
                   className="w-full pl-12 pr-12 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
                 />
                 <button
@@ -149,30 +191,72 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Remember & Forgot */}
-            <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="w-4 h-4 rounded border-gray-700 bg-gray-800 text-cyan-500 focus:ring-cyan-500 focus:ring-offset-0"
-                />
-                <span className="text-sm text-gray-400">Remember me</span>
-              </label>
-              <button
-                type="button"
-                className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
+            {/* Confirm Password Input */}
+            <div>
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-300 mb-2"
               >
-                Forgot Password?
-              </button>
+                Confirm Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm your password"
+                  required
+                  className="w-full pl-12 pr-12 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Terms Checkbox */}
+            <div className="flex items-start gap-2">
+              <input
+                type="checkbox"
+                id="terms"
+                required
+                className="w-4 h-4 mt-1 rounded border-gray-700 bg-gray-800 text-cyan-500 focus:ring-cyan-500 focus:ring-offset-0"
+              />
+              <label htmlFor="terms" className="text-sm text-gray-400">
+                I agree to the{" "}
+                <button
+                  type="button"
+                  className="text-cyan-400 hover:text-cyan-300 transition-colors"
+                >
+                  Terms of Service
+                </button>{" "}
+                and{" "}
+                <button
+                  type="button"
+                  className="text-cyan-400 hover:text-cyan-300 transition-colors"
+                >
+                  Privacy Policy
+                </button>
+              </label>
             </div>
 
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={isLoading}
-              className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-lg hover:from-cyan-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-lg hover:from-cyan-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300"
             >
-              {isLoading ? "Signing In..." : "Sign In"}
+              Create Account
             </button>
           </form>
 
@@ -188,15 +272,15 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Sign Up Link */}
+          {/* Sign In Link */}
           <p className="mt-6 text-center text-sm text-gray-400">
-            Don't have an account?{" "}
+            Already have an account?{" "}
             <button
-              onClick={() => navigate("/signup")}
               type="button"
+              onClick={() => navigate("/login")}
               className="text-cyan-400 hover:text-cyan-300 font-medium transition-colors"
             >
-              Sign up
+              Sign in
             </button>
           </p>
         </div>
@@ -205,4 +289,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

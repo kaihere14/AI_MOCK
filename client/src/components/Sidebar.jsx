@@ -27,6 +27,12 @@ const Sidebar = () => {
     { icon: Settings, label: "Settings" },
     { icon: LogOut, label: "Log Out" },
   ];
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    updateActiveItem("Dashboard");
+    navigate("/login");
+  };
 
   return (
     <div className="flex h-screen bg-gray-50 w-fit sticky top-0">
@@ -111,7 +117,10 @@ const Sidebar = () => {
           </button>
 
           <button
-            onClick={() => updateActiveItem("Practice")}
+            onClick={() => {
+              updateActiveItem("Practice");
+              navigate("/practice");
+            }}
             className={`w-full flex items-center cursor-pointer gap-3 px-3 py-3 rounded-lg mb-1 transition-colors ${
               activeItem === "Practice"
                 ? "text-white"
@@ -135,7 +144,10 @@ const Sidebar = () => {
           </button>
 
           <button
-            onClick={() => updateActiveItem("My Notes")}
+            onClick={() => {
+              updateActiveItem("My Notes");
+              navigate("/notes");
+            }}
             className={`w-full flex items-center cursor-pointer gap-3 px-3 py-3 rounded-lg mb-1 transition-colors ${
               activeItem === "My Notes"
                 ? "text-white"
@@ -159,7 +171,10 @@ const Sidebar = () => {
           </button>
 
           <button
-            onClick={() => updateActiveItem("Profile")}
+            onClick={() => {
+              updateActiveItem("Profile");
+              navigate("/profile");
+            }}
             className={`w-full flex items-center cursor-pointer gap-3 px-3 py-3 rounded-lg mb-1 transition-colors ${
               activeItem === "Profile"
                 ? "text-white"
@@ -200,7 +215,7 @@ const Sidebar = () => {
           </button>
 
           <button
-            onClick={() => updateActiveItem("Log Out")}
+            onClick={() => handleLogout()}
             className="w-full cursor-pointer flex items-center gap-3 px-3 py-3 rounded-lg mb-1 text-white hover:text-white transition-colors"
             onMouseEnter={(e) =>
               (e.currentTarget.style.backgroundColor = "#1e2327")

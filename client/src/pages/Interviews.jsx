@@ -20,7 +20,14 @@ import {
 } from "lucide-react";
 
 const Interviews = () => {
-  const { interviews, fetchInterviews, setInterviews } = useAppContext();
+  const {
+    interviews,
+    fetchInterviews,
+    setInterviews,
+    isAuthChecking,
+    fetchUserData,
+    setActiveItem,
+  } = useAppContext();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterRole, setFilterRole] = useState("");
   const [filterDate, setFilterDate] = useState("");
@@ -37,12 +44,34 @@ const Interviews = () => {
   ];
 
   useEffect(() => {
-    // If interviews are not loaded, fetch them
-    if (!interviews || interviews.length === 0) {
-      setLoading(true);
-      fetchInterviews().finally(() => setLoading(false));
-    }
+    const initializePage = async () => {
+      if (!localStorage.getItem("accessToken")) {
+        return; 
+      }
+
+      // If interviews are not loaded, fetch them
+      if (!interviews || interviews.length === 0) {
+        fetchUserData()
+        setLoading(true);
+        fetchInterviews().finally(() => setLoading(false));
+        setActiveItem("Interviews");
+      }
+    };
+
+    initializePage();
   }, []);
+
+  // Show loading while checking authentication
+  if (isAuthChecking) {
+    return (
+      <div className="w-full min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-400">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   // Filter interviews based on search and filters
   const filteredInterviews = interviews?.filter((interview) => {
@@ -106,7 +135,7 @@ const Interviews = () => {
 
   const handleInterviewCreated = (newInterview) => {
     setInterviews([...interviews, newInterview]);
-    fetchInterviews(); // Refresh the list
+    fetchInterviews(); 
   };
 
   return (

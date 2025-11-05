@@ -17,20 +17,17 @@ import {
   DollarSign,
   Calendar,
 } from "lucide-react";
+import Welcome from "./Welcome";
 
 const Home = () => {
   const [selectedInterview, setSelectedInterview] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  useEffect(() => {
-    fetchUserData();
-    fetchInterviews();
-    fetchTestResults();
-  }, []);
-
   const navigate = useNavigate();
   const {
+    isLoggedIn,
+    isAuthChecking,
     fetchUserData,
     fetchInterviews,
     interviews,
@@ -39,10 +36,42 @@ const Home = () => {
     updateActiveItem,
     setInterviews,
   } = useAppContext();
+
   useEffect(() => {
-    console.log("Interviews data:", interviews);
-    console.log("Test Results data:", testResults);
-  }, [interviews, testResults]);
+    const checkAuth = async () => {
+      await fetchUserData();
+      // After fetching user data, check if logged in
+      if (!localStorage.getItem("accessToken")) {
+        navigate("/welcome");
+      } else {
+        fetchInterviews();
+        fetchTestResults();
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+
+
+  // Show loading while checking authentication
+  if (isAuthChecking) {
+    return (
+      <div className="w-screen h-screen flex items-center justify-center bg-black">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-400">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if(!isLoggedIn){
+    return navigate("/welcome");
+  }
+  
+
+
   const image = [
     "https://i.pinimg.com/736x/e1/72/ab/e172abaca6b2de1397d3cbfb0391710e.jpg",
     "https://i.pinimg.com/1200x/d4/5e/a6/d45ea667cb8cf20a42984d2847006b9e.jpg",
@@ -108,7 +137,7 @@ const Home = () => {
         />
         <Card
           title="Latest Score"
-          count={`${testResults?.[testResults.length - 1]?.accuracy}%`}
+          count={`${testResults?.[testResults.length - 1]?.accuracy || 0} % ` || "N/A"}
           buttonText="View Report"
           buttonLink={`/report/${testResults?.[testResults.length - 1]?._id}`}
         />
