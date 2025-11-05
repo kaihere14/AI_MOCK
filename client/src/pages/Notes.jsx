@@ -331,7 +331,7 @@ const Notes = () => {
                 onClick={() => handleNoteClick(note)}
                 className="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-cyan-500 transition-all duration-300 cursor-pointer group"
               >
-                {/* Note Header */}
+
                 <div className="flex items-start justify-between mb-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center shrink-0">
                     <FileText className="w-6 h-6 text-white" />
@@ -341,17 +341,17 @@ const Notes = () => {
                   </span>
                 </div>
 
-                {/* Note Title */}
+
                 <h3 className="text-xl font-semibold text-white mb-3 line-clamp-2 group-hover:text-cyan-400 transition-colors">
                   {note.title}
                 </h3>
 
-                {/* Note Content Preview */}
+
                 <p className="text-gray-400 text-sm mb-4 line-clamp-3">
                   {truncateContent(note.content)}
                 </p>
 
-                {/* Tags */}
+
                 {note.tags && note.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-auto">
                     {note.tags.slice(0, 3).map((tag, idx) => (
