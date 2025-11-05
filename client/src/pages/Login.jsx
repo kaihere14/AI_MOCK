@@ -6,7 +6,7 @@ import { useAppContext } from "../context/AppContext";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setUser,setActiveItem } = useAppContext();
+  const { setUser, setActiveItem } = useAppContext();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -71,9 +71,11 @@ const Login = () => {
       <div className="relative w-full max-w-md">
         {/* Logo */}
         <div className="flex items-center justify-center gap-2 sm:gap-3 mb-6 sm:mb-8">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center">
-            <div className="w-5 h-5 sm:w-6 sm:h-6 border-3 border-white border-r-transparent border-b-transparent rounded-full transform -rotate-45"></div>
-          </div>
+          <img
+            src="https://iili.io/KZZWvF1.png"
+            alt="PrepDash Logo"
+            className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+          />
           <span className="text-white text-2xl sm:text-3xl font-bold tracking-tight">
             PrepDash
           </span>

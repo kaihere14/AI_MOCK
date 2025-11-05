@@ -6,7 +6,7 @@ import { useAppContext } from "../context/AppContext";
 
 const Register = () => {
   const navigate = useNavigate();
-  const { setUser,setIsLoggedIn ,setActiveItem } = useAppContext();
+  const { setUser, setIsLoggedIn, setActiveItem } = useAppContext();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -85,9 +85,11 @@ const Register = () => {
       <div className="relative w-full max-w-md">
         {/* Logo */}
         <div className="flex items-center justify-center gap-3 mb-8">
-          <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center">
-            <div className="w-6 h-6 border-3 border-white border-r-transparent border-b-transparent rounded-full transform -rotate-45"></div>
-          </div>
+          <img
+            src="https://iili.io/KZZWvF1.png"
+            alt="PrepDash Logo"
+            className="w-12 h-12 object-contain"
+          />
           <span className="text-white text-3xl font-bold tracking-tight">
             PrepDash
           </span>

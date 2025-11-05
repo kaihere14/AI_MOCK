@@ -71,9 +71,11 @@ const Welcome = () => {
         {/* Navigation */}
         <nav className="relative z-10 px-6 md:px-20 py-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
-              <Sparkles className="w-6 h-6 text-white" />
-            </div>
+            <img
+              src="https://iili.io/KZZWvF1.png"
+              alt="PrepDash Logo"
+              className="w-10 h-10 object-contain"
+            />
             <span className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
               PrepDash
             </span>
@@ -261,9 +263,11 @@ const Welcome = () => {
       <footer className="px-6 md:px-20 py-12 border-t border-gray-800">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-white" />
-            </div>
+            <img
+              src="https://iili.io/KZZWvF1.png"
+              alt="PrepDash Logo"
+              className="w-8 h-8 object-contain"
+            />
             <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
               PrepDash
             </span>

@@ -22,7 +22,7 @@ const Sidebar = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     updateActiveItem("Dashboard");
-    navigate("/login");
+    navigate("/welcome");
     setIsMobileMenuOpen(false);
   };
 

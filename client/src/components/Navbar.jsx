@@ -72,9 +72,11 @@ export const Navbar = () => {
           onClick={() => navigate("/")}
           className="flex items-center gap-2 cursor-pointer ml-14 lg:ml-0"
         >
-          <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center relative overflow-hidden">
-            <div className="w-4 h-4 border-2 border-white border-r-transparent border-b-transparent rounded-full transform -rotate-45"></div>
-          </div>
+          <img
+            src="https://iili.io/KZZWvF1.png"
+            alt="PrepDash Logo"
+            className="w-8 h-8 object-contain"
+          />
           <span className="text-white text-xl font-bold tracking-tight hidden sm:block">
             PrepDash
           </span>
