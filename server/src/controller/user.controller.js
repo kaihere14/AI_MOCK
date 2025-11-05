@@ -29,8 +29,9 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
     const newUser = new User({ email, password, name });
+    const {accessToken, refreshToken} = await generatAccessRefresh(newUser._id);
     await newUser.save();
-    res.status(201).json({ message: 'User registered successfully' });
+    res.status(201).json({ message: 'User registered successfully', newUser ,accessToken, refreshToken});
   } catch (error) {
     res.status(500).json({ message: 'Server error',error})
   }
@@ -63,5 +64,18 @@ export const getUserProfile = async (req, res) => {
   } catch (error) {
     console.log(error)
     res.status(500).json({ message: 'Server error'});
+  }
+};
+
+export const deleteUser = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const deletedUser = await User.findByIdAndDelete(userId);
+    if (!deletedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json({ message: 'User deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
   }
 };

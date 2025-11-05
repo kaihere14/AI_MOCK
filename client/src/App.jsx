@@ -7,10 +7,16 @@ import Interviews from "./pages/Interviews";
 import { AppProvider } from "./context/AppContext";
 import Login from "./pages/login";
 import Report from "./pages/Report";
+import Welcome from "./pages/Welcome";
+import Practice from "./pages/Practice";
+import Profile from "./pages/Profile";
+import Register from "./pages/Register";
+import Notes from "./pages/Notes";
 
 const AppContent = () => {
   const location = useLocation();
-  const hideSidebar = location.pathname === "/login";
+  const hideSidebar =
+    location.pathname === "/login" || location.pathname === "/welcome" || location.pathname === "/signup";
 
   return (
     <div className="flex bg-black text-white h-full">
@@ -20,6 +26,11 @@ const AppContent = () => {
         <Route path="/interviews" element={<Interviews />} />
         <Route path="/login" element={<Login />} />
         <Route path="/report/:id" element={<Report />} />
+        <Route path="/welcome" element={<Welcome />} />
+        <Route path="/practice" element={<Practice />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/signup" element={<Register />} />
+        <Route path="/notes" element={<Notes />} />
       </Routes>
     </div>
   );

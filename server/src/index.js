@@ -17,6 +17,7 @@ import user from "./routes/user.routes.js";
 import question from "./routes/question.routes.js";
 import test from "./routes/test.routes.js";
 import interview from "./routes/interview.routes.js";
+import notes from "./routes/notes.route.js";
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -25,6 +26,7 @@ app.use("/api/users", user);
 app.use("/api/questions", question);
 app.use("/api/tests", test);
 app.use("/api/interviews", interview);
+app.use("/api/notes", notes);
 
 connectDB().then(() => {
   app.listen(port, () => {

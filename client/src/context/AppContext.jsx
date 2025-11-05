@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 import axios from "axios";
+import { set } from "mongoose";
 
 // Create the context
 const AppContext = createContext();
@@ -16,8 +17,11 @@ export const useAppContext = () => {
 // Provider component
 export const AppProvider = ({ children }) => {
   const [activeItem, setActiveItem] = useState("Dashboard");
-    const [interviews , setInterviews ] = useState([]);
-    const [testResults , setTestResults ] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
+  const [interviews, setInterviews] = useState([]);
+  const [testResults, setTestResults] = useState([]);
+  const [notes, setNotes] = useState([]);
   const [user, setUser] = useState({
     name: "Alex Johnson",
     email: "alex.j@email.com",
@@ -34,6 +38,13 @@ export const AppProvider = ({ children }) => {
   const fetchUserData = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
+
+      if (!accessToken) {
+        setIsLoggedIn(false);
+        setIsAuthChecking(false);
+        return;
+      }
+
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/users/profile`,
         {
@@ -45,14 +56,18 @@ export const AppProvider = ({ children }) => {
       // Set default avatar if user doesn't have one
       const userData = {
         ...response.data,
-        avatar:"https://api.dicebear.com/9.x/avataaars/svg?seed=DefaultUser&backgroundColor=b6e3f4"
+        avatar:
+          "https://api.dicebear.com/9.x/avataaars/svg?seed=DefaultUser&backgroundColor=b6e3f4",
       };
+      setIsLoggedIn(true);
       setUser(userData);
+      setIsAuthChecking(false);
     } catch (error) {
+      setIsLoggedIn(false);
+      setIsAuthChecking(false);
       console.error("Error fetching user data:", error);
     }
   };
-
 
   const fetchInterviews = async () => {
     try {
@@ -71,7 +86,7 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-const fetchTestResults = async () => {
+  const fetchTestResults = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
       const response = await axios.get(
@@ -89,7 +104,23 @@ const fetchTestResults = async () => {
     }
   };
 
-
+  const fetchNotes = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/notes/getnotes`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log("Notes:", response.data.notes);
+      setNotes(response.data.notes);
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+    }
+  };
 
   // Function to update user data
   const updateUser = (userData) => {
@@ -97,8 +128,14 @@ const fetchTestResults = async () => {
   };
 
   const value = {
+    isLoggedIn,
+    isAuthChecking,
+    setIsLoggedIn,
     activeItem,
     setActiveItem,
+    notes,
+    setNotes,
+    fetchNotes,
     updateActiveItem,
     fetchUserData,
     fetchInterviews,
@@ -106,7 +143,7 @@ const fetchTestResults = async () => {
     testResults,
     setTestResults,
     interviews,
-    setInterviews, 
+    setInterviews,
     user,
     setUser,
     updateUser,

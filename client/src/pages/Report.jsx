@@ -19,7 +19,7 @@ import {
 const Report = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { testResults, fetchTestResults } = useAppContext();
+  const { testResults, fetchTestResults, setActiveItem } = useAppContext();
 
   useEffect(() => {
     fetchTestResults();
@@ -69,7 +69,10 @@ const Report = () => {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => {
+                navigate(-1);
+                setActiveItem("Dashboard");
+              }}
               className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
             >
               <ArrowLeft className="w-6 h-6" />
