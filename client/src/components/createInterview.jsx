@@ -93,7 +93,6 @@ const CreateInterview = ({ onClose, onInterviewCreated }) => {
         onClose();
       }
     } catch (err) {
-      console.error("Error creating interview:", err);
       setError(
         err.response?.data?.message ||
           "Failed to create interview. Please try again."

@@ -79,3 +79,22 @@ export const deleteUser = async (req, res) => {
     res.status(500).json({ message: 'Server error', error });
   }
 };
+
+export const refreshToken = async (req, res) => {
+  try {
+    const { token } = req.body;
+    if (!token) {
+      return res.status(400).json({ message: 'Refresh token is required' });
+    }
+    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+      if (err) {
+        return res.status(403).json({ message: 'Invalid refresh token' });
+      }
+      const userId = decoded.userId;
+      const { accessToken, refreshToken } = await generatAccessRefresh(userId);
+      res.status(200).json({ accessToken, refreshToken });
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};

@@ -82,7 +82,6 @@ const AddNotes = ({ onClose, onNoteCreated }) => {
         onClose();
       }
     } catch (err) {
-      console.error("Error creating note:", err);
       setError(
         err.response?.data?.message ||
           "Failed to create note. Please try again."

@@ -46,9 +46,9 @@ const Notes = () => {
         return;
       }
 
-      // If notes are not loaded, fetch them
+      await fetchUserData();
+
       if (!notes || notes.length === 0) {
-        fetchUserData();
         setLoading(true);
         fetchNotes().finally(() => setLoading(false));
         setActiveItem("Notes");
@@ -58,7 +58,6 @@ const Notes = () => {
     initializePage();
   }, []);
 
-  // Show loading while checking authentication
   if (isAuthChecking) {
     return (
       <div className="w-full min-h-screen bg-black flex items-center justify-center">
@@ -70,10 +69,8 @@ const Notes = () => {
     );
   }
 
-  // Get all unique tags from notes
   const allTags = [...new Set(notes?.flatMap((note) => note.tags || []) || [])];
 
-  // Filter notes based on search and filters
   const filteredNotes = notes?.filter((note) => {
     const matchesSearch =
       note.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -182,7 +179,6 @@ const Notes = () => {
       setIsEditing(false);
       fetchNotes();
     } catch (error) {
-      console.error("Error updating note:", error);
       alert("Failed to update note. Please try again.");
     } finally {
       setIsUpdating(false);
@@ -208,7 +204,6 @@ const Notes = () => {
         setNotes(updatedNotes);
         handleCloseModal();
       } catch (error) {
-        console.error("Error deleting note:", error);
         alert("Failed to delete note. Please try again.");
       }
     }

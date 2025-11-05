@@ -4,7 +4,7 @@ import { testResult } from "../models/test.model.js";
 
 export const createTest = async (req, res) => {
   try {
-    const { type,difficulty } = req.body;
+    const { type, difficulty } = req.body;
     const userId = req.userId;
     if (!type || !difficulty) {
       return res
@@ -27,7 +27,11 @@ export const createTest = async (req, res) => {
     const newTestSession = new testSession({
       userId,
       type,
-      questions: questions.map((q) => ({ questionId: q._id, userAnswer: null, isCorrect: null })),
+      questions: questions.map((q) => ({
+        questionId: q._id,
+        userAnswer: null,
+        isCorrect: null,
+      })),
     });
 
     await newTestSession.save();
@@ -35,80 +39,106 @@ export const createTest = async (req, res) => {
     res.status(201).json({ testSessionId: newTestSession._id, newTestSession });
   } catch (error) {
     console.error("Error creating test session:", error);
-    res.status(500).json({ message: "Server error",error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-
-
-
 export const updateAnswer = async (req, res) => {
-    const { testSessionId, questionId, userAnswer } = req.body;
-
-    try {
-        const currentSession = await testSession.findById(testSessionId);
-        if (!currentSession) {
-            return res.status(404).json({ message: "Test session not found." });
-        }
-        const question = currentSession.questions.find(q => q.questionId.toString() === questionId);
-        if (!question) {
-            return res.status(404).json({ message: "Question not found in test session." });
-        }
-
-        question.userAnswer = userAnswer;
-        const correctQuestion = await Question.findById(questionId);
-        question.isCorrect = correctQuestion.correctOption === userAnswer;
-        await currentSession.save();
-
-        res.status(200).json({ message: "Answer updated successfully.", testSession });
-    } catch (error) {
-        console.error("Error updating answer:", error);
-        res.status(500).json({ message: "Server error", error: error.message });
+  const { testSessionId, questionId, userAnswer } = req.body;
+  try {
+    const currentSession = await testSession.findById(testSessionId);
+    if (!currentSession) {
+      return res.status(404).json({ message: "Test session not found." });
     }
-}
+
+    const question = currentSession.questions.find(
+      (q) => q._id.toString() === questionId.toString()
+    );
+
+    if (!question) {
+      return res
+        .status(404)
+        .json({ message: "Question not found in test session." });
+    }
+
+    question.userAnswer = userAnswer;
+    const correctQuestion = await Question.findById(question.questionId);
+
+    if (!correctQuestion) {
+      return res.status(404).json({ message: "Question details not found." });
+    }
+
+    question.isCorrect = correctQuestion.correctOption === userAnswer;
+    await currentSession.save();
+
+    res.status(200).json({ message: "Answer updated successfully.", question });
+  } catch (error) {
+    console.error("Error updating answer:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
 
 export const finalizeTest = async (req, res) => {
-    const { testSessionId } = req.params;
-    const userId = req.userId;
+  const { testSessionId } = req.params;
+  const userId = req.userId;
 
-    try {
-        const currentSession = await testSession.findById(testSessionId);
-        if (!currentSession) {
-            return res.status(404).json({ message: "Test session not found." });
-        }
-
-        // Calculate results
-        const totalQuestions = currentSession.questions.length;
-        const correctAnswers = currentSession.questions.filter(q => q.isCorrect).length;
-        const accuracy = (correctAnswers / totalQuestions) * 100;
-
-        const testResultEntry = new testResult({
-            userId: userId,
-            correct: correctAnswers,
-            total: totalQuestions,
-            accuracy: accuracy,
-            timeTaken: Date.now() - currentSession.startedAt,
-            weakTopics: [], // This can be enhanced to actually calculate weak topics
-            testType: currentSession.type,
-        });
-
-        await testResultEntry.save();
-
-        res.status(200).json({ message: "Test finalized successfully.", accuracy });
-    } catch (error) {
-        console.error("Error finalizing test:", error);
-        res.status(500).json({ message: "Server error", error: error.message });
+  try {
+    const currentSession = await testSession.findById(testSessionId);
+    if (!currentSession) {
+      return res.status(404).json({ message: "Test session not found." });
     }
-}
+
+    // Calculate results
+    const totalQuestions = currentSession.questions.length;
+    const correctAnswers = currentSession.questions.filter(
+      (q) => q.isCorrect
+    ).length;
+    const accuracy = (correctAnswers / totalQuestions) * 100;
+
+    const testResultEntry = new testResult({
+      userId: userId,
+      correct: correctAnswers,
+      total: totalQuestions,
+      accuracy: accuracy,
+      timeTaken: Date.now() - currentSession.startedAt,
+      weakTopics: [], // This can be enhanced to actually calculate weak topics
+      testType: currentSession.type,
+    });
+
+    await testResultEntry.save();
+
+    res.status(200).json({ message: "Test finalized successfully.", accuracy, testResultId: testResultEntry._id });
+  } catch (error) {
+    console.error("Error finalizing test:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
 
 export const getTestResults = async (req, res) => {
-    const userId = req.userId;
+  const userId = req.userId;
 
-    try {
-        const results = await testResult.find({ userId });
-        res.status(200).json(results);
-    } catch (error) {
-        console.error("Error fetching test results:", error);
-        res.status(500).json({ message: "Server error", error: error.message });
+  try {
+    const results = await testResult.find({ userId });
+    res.status(200).json(results);
+  } catch (error) {
+    console.error("Error fetching test results:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const getTestSessionById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const testSessionData = await testSession
+      .findById(id)
+      .populate("questions.questionId");
+    if (!testSessionData) {
+      return res.status(404).json({ message: "Test session not found." });
     }
-} 
+    res.status(200).json(testSessionData);
+  } catch (error) {
+    console.error("Error fetching test session:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};

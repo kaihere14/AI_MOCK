@@ -49,8 +49,9 @@ const Interviews = () => {
         return;
       }
 
+      await fetchUserData();
+
       if (!interviews || interviews.length === 0) {
-        fetchUserData();
         setLoading(true);
         fetchInterviews().finally(() => setLoading(false));
         setActiveItem("Interviews");
@@ -120,7 +121,6 @@ const Interviews = () => {
         setInterviews(updatedInterviews);
         handleCloseModal();
       } catch (error) {
-        console.error("Error deleting interview:", error);
         alert("Failed to delete interview. Please try again.");
       }
     }
@@ -453,9 +453,6 @@ const Interviews = () => {
               <div className="flex gap-4">
                 <button
                   onClick={async () => {
-                    handleDeleteInterview(
-                      selectedInterview._id || selectedInterview.id
-                    );
                     await axios.delete(
                       `${
                         import.meta.env.VITE_BACKEND_URL
@@ -469,6 +466,9 @@ const Interviews = () => {
                           )}`,
                         },
                       }
+                    );
+                    handleDeleteInterview(
+                      selectedInterview._id || selectedInterview.id
                     );
                   }}
                   className="flex-1 flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 px-6 py-3 rounded-lg transition-all duration-300 font-semibold"
