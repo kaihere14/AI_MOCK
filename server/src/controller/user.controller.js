@@ -98,3 +98,19 @@ export const refreshToken = async (req, res) => {
     res.status(500).json({ message: 'Server error', error });
   }
 };
+
+export const  chnagePassword = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { oldPassword, newPassword } = req.body;
+    const user = await User.findById(userId).select('+password');
+    if (!user || !(await user.comparePassword(oldPassword))) {
+      return res.status(401).json({ message: 'Old password is incorrect' });
+    }
+    user.password = newPassword;
+    await user.save();
+    res.status(200).json({ message: 'Password changed successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};

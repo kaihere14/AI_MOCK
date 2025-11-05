@@ -6,7 +6,7 @@ import { useAppContext } from "../context/AppContext";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setUser } = useAppContext();
+  const { setUser,setActiveItem } = useAppContext();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -46,6 +46,7 @@ const Login = () => {
       };
 
       setUser(userData);
+      setActiveItem("Dashboard");
       navigate("/");
     } catch (err) {
       console.error("Login error:", err);
