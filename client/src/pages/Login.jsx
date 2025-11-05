@@ -59,29 +59,31 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-black flex items-center justify-center p-4">
+    <div className="min-h-screen w-full bg-black flex items-center justify-center p-4 sm:p-6">
       {/* Background gradient effects */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
       </div>
 
       {/* Login Card */}
       <div className="relative w-full max-w-md">
         {/* Logo */}
-        <div className="flex items-center justify-center gap-3 mb-8">
-          <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center">
-            <div className="w-6 h-6 border-3 border-white border-r-transparent border-b-transparent rounded-full transform -rotate-45"></div>
+        <div className="flex items-center justify-center gap-2 sm:gap-3 mb-6 sm:mb-8">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center">
+            <div className="w-5 h-5 sm:w-6 sm:h-6 border-3 border-white border-r-transparent border-b-transparent rounded-full transform -rotate-45"></div>
           </div>
-          <span className="text-white text-3xl font-bold tracking-tight">
+          <span className="text-white text-2xl sm:text-3xl font-bold tracking-tight">
             PrepDash
           </span>
         </div>
 
         {/* Card */}
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 shadow-2xl">
+        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
           <div className="mb-6">
-            <h2 className="text-2xl font-bold text-white mb-2">Welcome Back</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">
+              Welcome Back
+            </h2>
             <p className="text-gray-400 text-sm">
               Sign in to continue to your dashboard
             </p>

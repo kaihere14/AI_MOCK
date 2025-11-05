@@ -1,9 +1,8 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../components/Card";
 import InterviewCard from "../components/InterviewCard";
 import CreateInterview from "../components/createInterview";
 import axios from "axios";
-
 import { Navbar } from "../components/Navbar";
 import { useAppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +16,6 @@ import {
   DollarSign,
   Calendar,
 } from "lucide-react";
-import Welcome from "./Welcome";
 
 const Home = () => {
   const [selectedInterview, setSelectedInterview] = useState(null);
@@ -40,7 +38,6 @@ const Home = () => {
   useEffect(() => {
     const checkAuth = async () => {
       await fetchUserData();
-      // After fetching user data, check if logged in
       if (!localStorage.getItem("accessToken")) {
         navigate("/welcome");
       } else {
@@ -52,9 +49,6 @@ const Home = () => {
     checkAuth();
   }, []);
 
-
-
-  // Show loading while checking authentication
   if (isAuthChecking) {
     return (
       <div className="w-screen h-screen flex items-center justify-center bg-black">
@@ -66,11 +60,9 @@ const Home = () => {
     );
   }
 
-  if(!isLoggedIn){
+  if (!isLoggedIn) {
     return navigate("/welcome");
   }
-  
-
 
   const image = [
     "https://i.pinimg.com/736x/e1/72/ab/e172abaca6b2de1397d3cbfb0391710e.jpg",
@@ -116,13 +108,13 @@ const Home = () => {
 
   const handleInterviewCreated = (newInterview) => {
     setInterviews([...interviews, newInterview]);
-    fetchInterviews(); // Refresh the list
+    fetchInterviews();
   };
 
   return (
-    <div className="w-screen overflow-y-auto ">
+    <div className="w-full min-h-screen overflow-y-auto">
       <Navbar />
-      <div className="flex flex-wrap pt-10 pl-20 gap-10  ">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 pt-6 sm:pt-10 px-4 sm:px-6 md:px-10 lg:px-20 gap-4 sm:gap-6">
         <Card
           title="Recent Interviews"
           count={interviews?.length}
@@ -137,24 +129,27 @@ const Home = () => {
         />
         <Card
           title="Latest Score"
-          count={`${testResults?.[testResults.length - 1]?.accuracy || 0} % ` || "N/A"}
+          count={
+            `${testResults?.[testResults.length - 1]?.accuracy || 0} % ` ||
+            "N/A"
+          }
           buttonText="View Report"
           buttonLink={`/report/${testResults?.[testResults.length - 1]?._id}`}
         />
       </div>
 
-      <div className="pl-20 pt-10 mr-24 pb-5">
-        <div className="flex items-center justify-between">
+      <div className="px-4 sm:px-6 md:px-10 lg:px-20 pt-6 sm:pt-10 pb-5">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="left">
-            <h1 className="text-2xl font-md">My Interviews</h1>
+            <h1 className="text-xl sm:text-2xl font-medium">My Interviews</h1>
           </div>
-          <div className="right">
+          <div className="right w-full sm:w-auto">
             <button
               onClick={() => setShowCreateModal(true)}
-              className="flex cursor-pointer items-center gap-3 bg-gradient-to-r from-pink-400 to-blue-400 text-white px-8 py-2 rounded-xl hover:from-pink-500 hover:to-blue-500 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold text-sm"
+              className="w-full sm:w-auto flex cursor-pointer items-center justify-center gap-2 sm:gap-3 bg-gradient-to-r from-pink-400 to-blue-400 text-white px-4 sm:px-8 py-2.5 sm:py-2 rounded-xl hover:from-pink-500 hover:to-blue-500 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold text-sm"
             >
               <svg
-                className="w-6 h-6"
+                className="w-5 h-5 sm:w-6 sm:h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -166,13 +161,13 @@ const Home = () => {
                   d="M12 4v16m8-8H4"
                 />
               </svg>
-              Add Interview
+              <span>Add Interview</span>
             </button>
           </div>
         </div>
 
-        <div className="flex gap-4 mt-6">
-          <select className="px-4 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-400 text-sm focus:outline-none focus:border-cyan-500 focus:text-white transition-all duration-300 cursor-pointer">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
+          <select className="w-full sm:w-auto px-4 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-400 text-xs sm:text-sm focus:outline-none focus:border-cyan-500 focus:text-white transition-all duration-300 cursor-pointer">
             <option value="">All Roles</option>
             <option value="frontend">Frontend Developer</option>
             <option value="backend">Backend Engineer</option>
@@ -182,7 +177,7 @@ const Home = () => {
             <option value="data">Data Scientist</option>
           </select>
 
-          <select className="px-4 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-400 text-sm focus:outline-none focus:border-cyan-500 focus:text-white transition-all duration-300 cursor-pointer">
+          <select className="w-full sm:w-auto px-4 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-400 text-xs sm:text-sm focus:outline-none focus:border-cyan-500 focus:text-white transition-all duration-300 cursor-pointer">
             <option value="">All Time</option>
             <option value="today">Today</option>
             <option value="week">This Week</option>
@@ -191,7 +186,7 @@ const Home = () => {
             <option value="year">This Year</option>
           </select>
 
-          <select className="px-4 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-400 text-sm focus:outline-none focus:border-cyan-500 focus:text-white transition-all duration-300 cursor-pointer">
+          <select className="w-full sm:w-auto px-4 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-400 text-xs sm:text-sm focus:outline-none focus:border-cyan-500 focus:text-white transition-all duration-300 cursor-pointer">
             <option value="">All Packages</option>
             <option value="0-50">$0 - $50k</option>
             <option value="50-100">$50k - $100k</option>
@@ -202,7 +197,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="flex flex-wrap  pl-20 gap-15 mb-6 ">
+      <div className="flex flex-wrap px-4 sm:px-6 md:px-10 lg:px-20 gap-4 sm:gap-6 lg:gap-10 mb-6">
         {interviews && interviews.length === 0 && (
           <p className="text-gray-400">No interviews found.</p>
         )}
@@ -223,28 +218,25 @@ const Home = () => {
             ))}
       </div>
 
-      {/* View All Interviews Button */}
       {interviews && interviews.length > 3 && (
-        <div className="flex justify-center pb-10">
+        <div className="flex justify-center px-4 pb-10">
           <button
             onClick={() => {
               navigate("/interviews");
               updateActiveItem("Interviews");
             }}
-            className="px-8 py-3 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl font-semibold text-sm"
+            className="w-full sm:w-auto px-6 sm:px-8 py-3 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl font-semibold text-sm"
           >
             View All Interviews
           </button>
         </div>
       )}
 
-      {/* Interview Details Modal */}
       {showModal && selectedInterview && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-gray-900 border border-gray-800 rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-            {/* Modal Header */}
-            <div className="sticky top-0 bg-gray-900 border-b border-gray-800 p-6 flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-white">
+            <div className="sticky top-0 bg-gray-900 border-b border-gray-800 p-4 sm:p-6 flex items-center justify-between">
+              <h2 className="text-lg sm:text-2xl font-bold text-white">
                 Interview Details
               </h2>
               <button
@@ -255,11 +247,9 @@ const Home = () => {
               </button>
             </div>
 
-            {/* Modal Content */}
-            <div className="p-6">
-              {/* Image and Basic Info */}
-              <div className="flex gap-6 mb-6">
-                <div className="w-32 h-32 rounded-xl overflow-hidden shrink-0">
+            <div className="p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-6">
+                <div className="w-full sm:w-32 h-48 sm:h-32 rounded-xl overflow-hidden shrink-0">
                   <img
                     src={selectedInterview.imageSrc || image[0]}
                     alt={selectedInterview.role}
@@ -267,10 +257,10 @@ const Home = () => {
                   />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-white mb-2">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
                     {selectedInterview.role}
                   </h3>
-                  <p className="text-xl text-cyan-400 mb-3">
+                  <p className="text-lg sm:text-xl text-cyan-400 mb-3">
                     {selectedInterview.companyName}
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -287,7 +277,6 @@ const Home = () => {
                 </div>
               </div>
 
-              {/* Details Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div className="bg-gray-800 rounded-lg p-4">
                   <div className="flex items-center gap-3 text-gray-400 mb-2">
@@ -346,7 +335,6 @@ const Home = () => {
                 )}
               </div>
 
-              {/* Description */}
               {selectedInterview.description && (
                 <div className="bg-gray-800 rounded-lg p-4 mb-6">
                   <div className="flex items-center gap-3 text-gray-400 mb-3">
@@ -359,22 +347,21 @@ const Home = () => {
                 </div>
               )}
 
-              {/* Action Buttons */}
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <button
                   onClick={() =>
                     handleDeleteInterview(
                       selectedInterview._id || selectedInterview.id
                     )
                   }
-                  className="flex-1 flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 px-6 py-3 rounded-lg transition-all duration-300 font-semibold"
+                  className="flex-1 flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-300 font-semibold text-sm sm:text-base"
                 >
-                  <Trash2 className="w-5 h-5" />
+                  <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
                   Delete Interview
                 </button>
                 <button
                   onClick={handleCloseModal}
-                  className="flex-1 bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-all duration-300 font-semibold"
+                  className="flex-1 bg-gray-800 hover:bg-gray-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-300 font-semibold text-sm sm:text-base"
                 >
                   Close
                 </button>
@@ -384,7 +371,6 @@ const Home = () => {
         </div>
       )}
 
-      {/* Create Interview Modal */}
       {showCreateModal && (
         <CreateInterview
           onClose={() => setShowCreateModal(false)}

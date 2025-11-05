@@ -29,7 +29,6 @@ const Profile = () => {
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    setUser(null);
     navigate("/welcome");
   };
   const handleDeleteAccount = async () => {
@@ -87,22 +86,24 @@ const Profile = () => {
   };
 
   return (
-    <div className="w-screen min-h-screen bg-black text-white overflow-y-auto">
+    <div className="w-full min-h-screen bg-black text-white overflow-y-auto">
       <Navbar />
 
-      <div className="px-6 md:px-20 pt-10 pb-20">
+      <div className="px-4 sm:px-6 md:px-10 lg:px-20 pt-6 sm:pt-10 pb-10 sm:pb-20">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">My Profile</h1>
-          <p className="text-gray-400">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
+            My Profile
+          </h1>
+          <p className="text-sm sm:text-base text-gray-400">
             Manage your account settings and preferences
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Profile Card */}
           <div className="lg:col-span-1">
-            <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 text-center">
+            <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6 lg:p-8 text-center">
               {/* Avatar */}
               <div className="relative inline-block mb-6">
                 <div className="w-32 h-32 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-4xl font-bold">
@@ -164,7 +165,7 @@ const Profile = () => {
             </div>
 
             {/* Stats Card */}
-            <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 mt-6">
+            <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6 mt-4 sm:mt-6">
               <h3 className="text-lg font-semibold text-white mb-4">
                 Statistics
               </h3>
@@ -198,23 +199,23 @@ const Profile = () => {
           </div>
 
           {/* Account Details */}
-          <div className="lg:col-span-2 space-y-5">
+          <div className="lg:col-span-2 space-y-4 sm:space-y-5">
             {/* Personal Information */}
-            <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-semibold text-white">
+            <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3 sm:gap-0">
+                <h3 className="text-lg sm:text-xl font-semibold text-white">
                   Personal Information
                 </h3>
                 <button
                   onClick={() => setIsEditing(!isEditing)}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg transition-colors"
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg transition-colors text-sm sm:text-base"
                 >
                   <Edit className="w-4 h-4" />
                   {isEditing ? "Cancel" : "Edit"}
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label className="flex items-center gap-2 text-gray-400 text-sm mb-2">
                     <User className="w-4 h-4 text-cyan-400" />
@@ -264,13 +265,13 @@ const Profile = () => {
               </div>
 
               {isEditing && (
-                <div className="mt-6 flex gap-4">
-                  <button className="flex-1 bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-lg transition-all duration-300 font-semibold">
+                <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-3 sm:gap-4">
+                  <button className="flex-1 bg-cyan-500 hover:bg-cyan-600 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-300 font-semibold text-sm sm:text-base">
                     Save Changes
                   </button>
                   <button
                     onClick={() => setIsEditing(false)}
-                    className="flex-1 bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-all duration-300 font-semibold"
+                    className="flex-1 bg-gray-800 hover:bg-gray-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-300 font-semibold text-sm sm:text-base"
                   >
                     Cancel
                   </button>
@@ -279,8 +280,8 @@ const Profile = () => {
             </div>
 
             {/* Account Settings */}
-            <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-              <h3 className="text-xl font-semibold text-white mb-6">
+            <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6">
+              <h3 className="text-lg sm:text-xl font-semibold text-white mb-4 sm:mb-6">
                 Account Settings
               </h3>
 
@@ -315,7 +316,7 @@ const Profile = () => {
             </div>
 
             {/* Danger Zone */}
-            <div className="bg-red-500/5 border border-red-500/30 rounded-xl p-6 h-[200px] flex flex-col">
+            <div className="bg-red-500/5 border border-red-500/30 rounded-xl p-4 sm:p-6 min-h-[180px] sm:h-[200px] flex flex-col">
               <h3 className="text-lg font-semibold text-red-400 mb-4">
                 Danger Zone
               </h3>
@@ -341,14 +342,14 @@ const Profile = () => {
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-900 border border-red-500/30 rounded-xl max-w-md w-full p-6 shadow-2xl">
+          <div className="bg-gray-900 border border-red-500/30 rounded-xl max-w-md w-full p-4 sm:p-6 shadow-2xl">
             {/* Header */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-red-500/10 rounded-lg flex items-center justify-center">
-                  <AlertTriangle className="w-6 h-6 text-red-400" />
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-500/10 rounded-lg flex items-center justify-center">
+                  <AlertTriangle className="w-5 h-5 sm:w-6 sm:h-6 text-red-400" />
                 </div>
-                <h3 className="text-xl font-bold text-red-400">
+                <h3 className="text-lg sm:text-xl font-bold text-red-400">
                   Delete Account
                 </h3>
               </div>
@@ -388,17 +389,17 @@ const Profile = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <button
                 onClick={closeDeleteModal}
-                className="flex-1 px-4 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors font-semibold"
+                className="flex-1 px-4 py-2.5 sm:py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors font-semibold text-sm sm:text-base"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteAccount}
                 disabled={deleteConfirmation !== "DELETE"}
-                className="flex-1 px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-red-500"
+                className="flex-1 px-4 py-2.5 sm:py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-red-500 text-sm sm:text-base"
               >
                 Delete Forever
               </button>

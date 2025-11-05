@@ -124,7 +124,6 @@ const Notes = () => {
     }));
   };
 
-
   const handleAddTag = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -241,26 +240,29 @@ const Notes = () => {
       <Navbar />
 
       {/* Header Section */}
-      <div className="px-20 pt-10 pb-6">
-        <div className="flex items-center justify-between mb-8">
+      <div className="px-4 sm:px-6 md:px-10 lg:px-20 pt-6 sm:pt-10 pb-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
           <div>
-            <h1 className="text-4xl font-bold mb-2">My Notes</h1>
-            <p className="text-gray-400">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
+              My Notes
+            </h1>
+            <p className="text-sm sm:text-base text-gray-400">
               {filteredNotes?.length || 0} notes found
             </p>
           </div>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-3 cursor-pointer bg-gradient-to-r from-pink-400 to-blue-400 text-white px-8 py-3 rounded-xl hover:from-pink-500 hover:to-blue-500 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold"
+            className="flex items-center gap-2 sm:gap-3 cursor-pointer bg-gradient-to-r from-pink-400 to-blue-400 text-white px-4 sm:px-6 lg:px-8 py-2 sm:py-3 rounded-xl hover:from-pink-500 hover:to-blue-500 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold text-sm sm:text-base"
           >
-            <Plus className="w-5 h-5" />
-            Add Note
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Add Note</span>
+            <span className="sm:hidden">Add</span>
           </button>
         </div>
 
         {/* Search and Filters */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6 mb-6 sm:mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             {/* Search Bar */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -315,7 +317,7 @@ const Notes = () => {
       </div>
 
       {/* Notes Grid */}
-      <div className="px-20 pb-10">
+      <div className="px-4 sm:px-6 md:px-10 lg:px-20 pb-10">
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="text-center">
@@ -324,14 +326,13 @@ const Notes = () => {
             </div>
           </div>
         ) : filteredNotes && filteredNotes.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {filteredNotes.map((note, index) => (
               <div
                 key={note._id || note.id || index}
                 onClick={() => handleNoteClick(note)}
                 className="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-cyan-500 transition-all duration-300 cursor-pointer group"
               >
-
                 <div className="flex items-start justify-between mb-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center shrink-0">
                     <FileText className="w-6 h-6 text-white" />
@@ -341,16 +342,13 @@ const Notes = () => {
                   </span>
                 </div>
 
-
                 <h3 className="text-xl font-semibold text-white mb-3 line-clamp-2 group-hover:text-cyan-400 transition-colors">
                   {note.title}
                 </h3>
 
-
                 <p className="text-gray-400 text-sm mb-4 line-clamp-3">
                   {truncateContent(note.content)}
                 </p>
-
 
                 {note.tags && note.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-auto">

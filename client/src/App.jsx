@@ -16,22 +16,26 @@ import Notes from "./pages/Notes";
 const AppContent = () => {
   const location = useLocation();
   const hideSidebar =
-    location.pathname === "/login" || location.pathname === "/welcome" || location.pathname === "/signup";
+    location.pathname === "/login" ||
+    location.pathname === "/welcome" ||
+    location.pathname === "/signup";
 
   return (
-    <div className="flex bg-black text-white h-full">
+    <div className="flex bg-black text-white min-h-screen w-full">
       {!hideSidebar && <Sidebar />}
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/interviews" element={<Interviews />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/report/:id" element={<Report />} />
-        <Route path="/welcome" element={<Welcome />} />
-        <Route path="/practice" element={<Practice />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/signup" element={<Register />} />
-        <Route path="/notes" element={<Notes />} />
-      </Routes>
+      <div className="flex-1 w-full min-w-0">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/interviews" element={<Interviews />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/report/:id" element={<Report />} />
+          <Route path="/welcome" element={<Welcome />} />
+          <Route path="/practice" element={<Practice />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/signup" element={<Register />} />
+          <Route path="/notes" element={<Notes />} />
+        </Routes>
+      </div>
     </div>
   );
 };

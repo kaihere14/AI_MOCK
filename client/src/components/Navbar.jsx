@@ -67,8 +67,8 @@ export const Navbar = () => {
 
   return (
     <div className="w-full bg-black">
-      <nav className="bg-black border-b border-gray-900  p-10 px-4 md:px-6 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-2 cursor-pointer">
+      <nav className="bg-black border-b border-gray-900 px-4 md:px-6 lg:px-10 h-16 flex items-center justify-between">
+        <div className="flex items-center gap-2 cursor-pointer ml-12 lg:ml-0">
           <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center relative overflow-hidden">
             <div className="w-4 h-4 border-2 border-white border-r-transparent border-b-transparent rounded-full transform -rotate-45"></div>
           </div>
@@ -77,21 +77,21 @@ export const Navbar = () => {
           </span>
         </div>
 
-        <div className="flex-1 max-w-xl mx-3 md:mx-6">
+        <div className="flex-1 max-w-xl mx-2 sm:mx-3 md:mx-6">
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+            <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
               onChange={handleSearchChange}
               onFocus={() => searchQuery && setShowSearchResults(true)}
-              placeholder="Search companies, roles..."
-              className="w-full py-2.5 pl-11 pr-4 bg-gray-900 border border-gray-800 rounded-lg text-sm text-gray-400 placeholder-gray-600 focus:outline-none focus:bg-gray-850 focus:border-cyan-500 focus:text-white transition-all duration-300"
+              placeholder="Search..."
+              className="w-full py-2 sm:py-2.5 pl-9 sm:pl-11 pr-3 sm:pr-4 bg-gray-900 border border-gray-800 rounded-lg text-xs sm:text-sm text-gray-400 placeholder-gray-600 focus:outline-none focus:bg-gray-850 focus:border-cyan-500 focus:text-white transition-all duration-300"
             />
 
             {/* Search Results Dropdown */}
             {showSearchResults && searchQuery && (
-              <div className="absolute top-full mt-2 w-full bg-gray-900 border border-gray-800 rounded-lg shadow-2xl z-50 max-h-96 overflow-y-auto">
+              <div className="absolute top-full mt-2 w-full left-0 right-0 bg-gray-900 border border-gray-800 rounded-lg shadow-2xl z-50 max-h-[70vh] sm:max-h-96 overflow-y-auto">
                 {filteredInterviews && filteredInterviews.length > 0 ? (
                   <>
                     <div className="px-4 py-3 border-b border-gray-800">
@@ -170,7 +170,7 @@ export const Navbar = () => {
             </button>
 
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 bg-gray-900 border border-gray-800 rounded-lg shadow-2xl z-50 max-h-96 overflow-y-auto">
+              <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-80 max-w-sm bg-gray-900 border border-gray-800 rounded-lg shadow-2xl z-50 max-h-[70vh] sm:max-h-96 overflow-y-auto">
                 <div className="px-4 py-3 border-b border-gray-800 flex items-center justify-between">
                   <h3 className="text-white font-semibold text-sm">
                     Notifications

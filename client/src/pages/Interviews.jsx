@@ -46,12 +46,11 @@ const Interviews = () => {
   useEffect(() => {
     const initializePage = async () => {
       if (!localStorage.getItem("accessToken")) {
-        return; 
+        return;
       }
 
-      // If interviews are not loaded, fetch them
       if (!interviews || interviews.length === 0) {
-        fetchUserData()
+        fetchUserData();
         setLoading(true);
         fetchInterviews().finally(() => setLoading(false));
         setActiveItem("Interviews");
@@ -61,7 +60,6 @@ const Interviews = () => {
     initializePage();
   }, []);
 
-  // Show loading while checking authentication
   if (isAuthChecking) {
     return (
       <div className="w-full min-h-screen bg-black flex items-center justify-center">
@@ -73,7 +71,6 @@ const Interviews = () => {
     );
   }
 
-  // Filter interviews based on search and filters
   const filteredInterviews = interviews?.filter((interview) => {
     const matchesSearch =
       interview.role?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -116,10 +113,6 @@ const Interviews = () => {
   const handleDeleteInterview = async (interviewId) => {
     if (window.confirm("Are you sure you want to delete this interview?")) {
       try {
-        // TODO: Add API call to delete interview
-        // await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/interviews/${interviewId}`);
-
-        // Update local state
         const updatedInterviews = interviews.filter(
           (interview) =>
             interview._id !== interviewId && interview.id !== interviewId
@@ -135,35 +128,35 @@ const Interviews = () => {
 
   const handleInterviewCreated = (newInterview) => {
     setInterviews([...interviews, newInterview]);
-    fetchInterviews(); 
+    fetchInterviews();
   };
 
   return (
     <div className="w-full min-h-screen bg-black text-white">
       <Navbar />
 
-      {/* Header Section */}
-      <div className="px-20 pt-10 pb-6">
-        <div className="flex items-center justify-between mb-8">
+      <div className="px-4 sm:px-6 md:px-10 lg:px-20 pt-6 sm:pt-10 pb-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
           <div>
-            <h1 className="text-4xl font-bold mb-2">All Interviews</h1>
-            <p className="text-gray-400">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
+              All Interviews
+            </h1>
+            <p className="text-sm sm:text-base text-gray-400">
               {filteredInterviews?.length || 0} interviews found
             </p>
           </div>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-3 cursor-pointer bg-gradient-to-r from-pink-400 to-blue-400 text-white px-8 py-3 rounded-xl hover:from-pink-500 hover:to-blue-500 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold"
+            className="flex items-center gap-2 sm:gap-3 cursor-pointer bg-gradient-to-r from-pink-400 to-blue-400 text-white px-4 sm:px-6 lg:px-8 py-2 sm:py-3 rounded-xl hover:from-pink-500 hover:to-blue-500 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold text-sm sm:text-base"
           >
-            <Plus className="w-5 h-5" />
-            Add Interview
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Add Interview</span>
+            <span className="sm:hidden">Add</span>
           </button>
         </div>
 
-        {/* Search and Filters */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Search Bar */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6 mb-6 sm:mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <div className="relative lg:col-span-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
@@ -175,7 +168,6 @@ const Interviews = () => {
               />
             </div>
 
-            {/* Role Filter */}
             <div className="relative">
               <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
               <select
@@ -195,7 +187,6 @@ const Interviews = () => {
               </select>
             </div>
 
-            {/* Date Filter */}
             <div className="relative">
               <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
               <select
@@ -212,7 +203,6 @@ const Interviews = () => {
               </select>
             </div>
 
-            {/* Salary Filter */}
             <div className="relative">
               <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
               <select
@@ -230,7 +220,6 @@ const Interviews = () => {
             </div>
           </div>
 
-          {/* Clear Filters */}
           {(searchTerm || filterRole || filterDate || filterSalary) && (
             <div className="mt-4 flex items-center justify-between">
               <p className="text-sm text-gray-400">
@@ -260,8 +249,7 @@ const Interviews = () => {
         </div>
       </div>
 
-      {/* Interviews List */}
-      <div className="px-20 pb-10">
+      <div className="px-4 sm:px-6 md:px-10 lg:px-20 pb-10">
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="text-center">
@@ -278,7 +266,6 @@ const Interviews = () => {
                 className="w-full bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-cyan-500 transition-all duration-300 cursor-pointer"
               >
                 <div className="flex items-center gap-6">
-                  {/* Image */}
                   <div className="w-24 h-24 rounded-lg overflow-hidden shrink-0">
                     <img
                       src={interview.imageSrc || image[index % 3]}
@@ -287,7 +274,6 @@ const Interviews = () => {
                     />
                   </div>
 
-                  {/* Content */}
                   <div className="flex-1 flex items-center justify-between">
                     <div className="flex-1">
                       <h3 className="text-xl font-semibold text-white mb-2">
@@ -308,7 +294,6 @@ const Interviews = () => {
                       </div>
                     </div>
 
-                    {/* Tags */}
                     {interview.tag && interview.tag.length > 0 && (
                       <div className="flex gap-2 flex-wrap">
                         {interview.tag.map((tag, idx) => (
@@ -350,11 +335,9 @@ const Interviews = () => {
         )}
       </div>
 
-      {/* Interview Details Modal */}
       {showModal && selectedInterview && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-gray-900 border border-gray-800 rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-            {/* Modal Header */}
             <div className="sticky top-0 bg-gray-900 border-b border-gray-800 p-6 flex items-center justify-between">
               <h2 className="text-2xl font-bold text-white">
                 Interview Details
@@ -367,9 +350,7 @@ const Interviews = () => {
               </button>
             </div>
 
-            {/* Modal Content */}
             <div className="p-6">
-              {/* Image and Basic Info */}
               <div className="flex gap-6 mb-6">
                 <div className="w-32 h-32 rounded-xl overflow-hidden shrink-0">
                   <img
@@ -399,7 +380,6 @@ const Interviews = () => {
                 </div>
               </div>
 
-              {/* Details Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div className="bg-gray-800 rounded-lg p-4">
                   <div className="flex items-center gap-3 text-gray-400 mb-2">
@@ -458,7 +438,6 @@ const Interviews = () => {
                 )}
               </div>
 
-              {/* Description */}
               {selectedInterview.description && (
                 <div className="bg-gray-800 rounded-lg p-4 mb-6">
                   <div className="flex items-center gap-3 text-gray-400 mb-3">
@@ -471,7 +450,6 @@ const Interviews = () => {
                 </div>
               )}
 
-              {/* Action Buttons */}
               <div className="flex gap-4">
                 <button
                   onClick={async () => {
@@ -510,7 +488,6 @@ const Interviews = () => {
         </div>
       )}
 
-      {/* Create Interview Modal */}
       {showCreateModal && (
         <CreateInterview
           onClose={() => setShowCreateModal(false)}
