@@ -45,8 +45,9 @@
 | **React Router DOM** | 7.9.5   | Client-side routing and navigation               |
 | **Tailwind CSS**     | 4.1.16  | Utility-first CSS framework for styling          |
 | **Lucide React**     | 0.552.0 | Icon library for modern UI elements              |
-| **Axios**            | -       | HTTP client for API requests                     |
-| **Vite**             | 7.1.7   | Fast build tool and dev server                   |
+| **Axios**            | 1.7.9   | HTTP client for API requests                     |
+| **React Hot Toast**  | 2.4.1   | Toast notification library                       |
+| **Vite**             | 7.1.12  | Fast build tool and dev server                   |
 
 ### Backend
 
@@ -302,6 +303,10 @@ AI_MOCK/
 - ✅ User profile avatar
 - ✅ Logout functionality
 - ✅ Search bar (UI ready)
+- ✅ Reports button in sidebar
+- ✅ Protected routes with authentication
+- ✅ 404 page for invalid routes
+- ✅ Compact filter dropdowns
 
 **Dashboard Cards:**
 
@@ -309,6 +314,15 @@ AI_MOCK/
 - Latest Test Score (with navigation)
 - Interview Tracker Count
 - My Notes Count
+
+**Navigation Structure:**
+
+- Home (Dashboard)
+- Interviews
+- Practice Tests
+- My Notes
+- Reports (All test results)
+- Profile
 
 ### 7. 🎨 UI/UX Features
 
@@ -318,20 +332,40 @@ AI_MOCK/
 - ✅ Gradient backgrounds
 - ✅ Smooth animations
 - ✅ Responsive design (mobile-first)
-- ✅ Loading states
+- ✅ Loading states with centered animations
 - ✅ Error handling messages
-- ✅ Success notifications
+- ✅ Toast notifications (react-hot-toast)
 - ✅ Modal dialogs
 - ✅ Icon-based navigation (Lucide React)
+- ✅ Consistent grid layouts
+- ✅ Custom 404 page
 
 **User Experience:**
 
 - Intuitive navigation
 - Clear visual hierarchy
-- Consistent color scheme
+- Consistent color scheme (cyan accents on dark gray)
 - Fast page transitions
 - Form validation feedback
+- Toast notifications for all actions
+- Centered loading animations
 - Accessibility considerations
+- Mobile-optimized filter controls
+- Aligned card layouts
+
+**Toast Notifications:**
+
+- Position: top-right
+- Duration: 3 seconds
+- Dark theme (#1f2937 background)
+- Cyan success icons, red error icons
+- Implemented on:
+  - Login/Register
+  - Profile updates (password, logout, delete)
+  - Interview creation/deletion
+  - Notes creation/deletion
+  - Test creation/deletion
+  - Sidebar logout
 
 ---
 
@@ -836,19 +870,20 @@ Response: 200 OK
 
 ### Pages Overview
 
-| Page              | Route                    | Purpose              | Key Features                                       |
-| ----------------- | ------------------------ | -------------------- | -------------------------------------------------- |
-| **Welcome**       | `/welcome`               | Landing page         | Welcome message, navigation to login/register      |
-| **Login**         | `/login`                 | User authentication  | Email/password login, JWT token storage            |
-| **Register**      | `/signup`                | User registration    | Create new account with validation                 |
-| **Home**          | `/`                      | Dashboard            | Stats cards, quick navigation, latest score        |
-| **Practice**      | `/practice`              | Test selection       | Choose test type and difficulty                    |
-| **Practice Test** | `/practice-test/:testId` | Test interface       | Answer questions, submit test                      |
-| **Report**        | `/report/:id`            | Individual report    | Detailed test results, accuracy breakdown          |
-| **All Reports**   | `/allreports`            | Reports history      | View all past test results                         |
-| **Interviews**    | `/interviews`            | Interview management | Create, view, delete interviews                    |
-| **Notes**         | `/notes`                 | Notes management     | Create, edit, delete, filter notes                 |
-| **Profile**       | `/profile`               | User profile         | View/edit profile, change password, delete account |
+| Page              | Route                    | Protection | Purpose              | Key Features                                       |
+| ----------------- | ------------------------ | ---------- | -------------------- | -------------------------------------------------- |
+| **Welcome**       | `/welcome`               | Public     | Landing page         | Welcome message, navigation to login/register      |
+| **Login**         | `/login`                 | Public     | User authentication  | Email/password login, JWT token storage, toasts    |
+| **Register**      | `/signup`                | Public     | User registration    | Create new account with validation, toasts         |
+| **Home**          | `/`                      | Protected  | Dashboard            | Stats cards, filters, interview grid, toasts       |
+| **Practice**      | `/practice`              | Protected  | Test selection       | Choose test type and difficulty                    |
+| **Practice Test** | `/practice-test/:testId` | Protected  | Test interface       | Answer questions, submit test                      |
+| **Report**        | `/report/:id`            | Protected  | Individual report    | Detailed test results, accuracy breakdown          |
+| **All Reports**   | `/allreports`            | Protected  | Reports history      | View all past test results                         |
+| **Interviews**    | `/interviews`            | Protected  | Interview management | Create, view, delete interviews, toasts            |
+| **Notes**         | `/notes`                 | Protected  | Notes management     | Create, edit, delete, filter notes, toasts         |
+| **Profile**       | `/profile`               | Protected  | User profile         | View/edit profile, change password, delete account |
+| **Not Found**     | `*`                      | Public     | 404 error page       | Custom 404 with navigation, no sidebar             |
 
 ### Components Overview
 
@@ -856,22 +891,25 @@ Response: 200 OK
 
 - **Purpose**: Top navigation bar
 - **Features**:
-  - Logo display
+  - Logo display (https://iili.io/KZZWvF1.png)
   - Search bar (UI ready)
   - Notifications button
-  - Reports quick access
   - Responsive design
+  - Minimal navigation (Reports moved to sidebar)
 
 #### Sidebar.jsx
 
 - **Purpose**: Side navigation menu
 - **Features**:
   - User profile display
-  - Navigation menu items (Dashboard, Interviews, Practice, My Notes, Profile)
+  - Navigation menu items (Dashboard, Interviews, Practice, My Notes, Reports, Profile)
   - Active route highlighting
-  - Logout button
+  - Logout button with toast notification
   - Mobile hamburger menu
   - Responsive collapse/expand
+  - Hidden on 404 page
+  - BarChart3 icon for Reports
+  - Settings button removed
 
 #### Card.jsx
 
@@ -887,14 +925,16 @@ Response: 200 OK
 
 #### InterviewCard.jsx
 
-- **Purpose**: Display interview details
+- **Purpose**: Display interview details in grid layout
 - **Features**:
   - Company name and role
   - Salary display
   - Location info
   - Tags display
-  - Delete functionality
+  - Delete functionality with toast
   - Hover effects
+  - Responsive grid integration (w-full, no fixed widths)
+  - Consistent alignment with dashboard cards
 
 #### createInterview.jsx
 
@@ -915,6 +955,18 @@ Response: 200 OK
   - Edit mode support
   - Modal backdrop
   - Form validation
+  - Toast notifications for success/errors
+
+#### NotFound.jsx (New)
+
+- **Purpose**: Custom 404 error page
+- **Features**:
+  - Gradient "404" text display
+  - Error message
+  - "Go Home" button (navigates to /)
+  - "Go Back" button (navigates to previous page)
+  - No sidebar display
+  - Centered layout
 
 ### Context Management (AppContext.jsx)
 
@@ -952,6 +1004,42 @@ Response: 200 OK
 - Loading states for async operations
 - Error handling for API calls
 - User authentication persistence
+- Toast notifications integrated throughout
+
+### Protected Routes
+
+**Implementation:**
+
+```javascript
+const ProtectedRoute = ({ children }) => {
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
+
+  if (!accessToken || !refreshToken) {
+    return <Navigate to="/welcome" replace />;
+  }
+
+  return children;
+};
+```
+
+**Protected Pages:**
+
+- `/` - Home Dashboard
+- `/interviews` - Interviews Management
+- `/practice` - Practice Test Selection
+- `/practice-test/:testId` - Test Interface
+- `/report/:id` - Test Report
+- `/allreports` - All Reports
+- `/notes` - Notes Management
+- `/profile` - User Profile
+
+**Public Pages:**
+
+- `/welcome` - Landing Page
+- `/login` - Login Page
+- `/signup` - Registration Page
+- `*` - 404 Not Found (no sidebar)
 
 ---
 
@@ -977,6 +1065,8 @@ Backend: Create User document
 Backend: Save to MongoDB
     ↓
 Response: 201 Created
+    ↓
+Frontend: Show success toast
     ↓
 Frontend: Redirect to login
 ```
@@ -1009,6 +1099,8 @@ Response: 200 OK with tokens + user data
 Frontend: Store tokens in localStorage
     ↓
 Frontend: Update AppContext (isLoggedIn, user)
+    ↓
+Frontend: Show success toast
     ↓
 Frontend: Redirect to dashboard
 ```
@@ -1079,7 +1171,9 @@ Frontend: Retry original request with new token
 ### Logout Flow
 
 ```
-User clicks logout button
+User clicks logout button (Sidebar or Profile)
+    ↓
+Frontend: Show success toast
     ↓
 Frontend: Remove tokens from localStorage
     ↓
@@ -1683,6 +1777,7 @@ curl -X POST http://localhost:4400/api/tests/finalize-test/YOUR_TEST_SESSION_ID 
 6. **Single Session**: Only one active test session per user
 7. **No Test Pause**: Cannot pause and resume tests later
 8. **Basic Search**: Search functionality in navbar is UI-only
+9. **Filter Functionality**: Home page filters are UI-only (not yet connected to backend)
 
 ### Planned Fixes
 
@@ -1694,6 +1789,21 @@ curl -X POST http://localhost:4400/api/tests/finalize-test/YOUR_TEST_SESSION_ID 
 - [ ] Support multiple concurrent test sessions
 - [ ] Add test pause/resume capability
 - [ ] Implement global search functionality
+- [ ] Connect filter dropdowns to backend filtering
+
+### Recent Fixes (November 2025)
+
+- ✅ Fixed axios dependency build error
+- ✅ Updated logo across all pages
+- ✅ Centered loading animations
+- ✅ Added Reports button to sidebar
+- ✅ Implemented custom 404 page
+- ✅ Fixed authentication redirect loop
+- ✅ Removed all console logs
+- ✅ Added toast notifications throughout app
+- ✅ Removed Settings button from sidebar
+- ✅ Fixed interview cards grid alignment
+- ✅ Improved filter dropdowns UI (compact, mobile-friendly)
 
 ---
 
@@ -1807,7 +1917,7 @@ curl -X POST http://localhost:4400/api/tests/finalize-test/YOUR_TEST_SESSION_ID 
 **Deployment**: Ready for production
 
 **Repository**: AI_MOCK  
-**Current Branch**: practice_section  
+**Current Branch**: bug_fix_1  
 **Last Updated**: November 6, 2025  
 **Version**: 1.0.0 MVP
 
@@ -1817,17 +1927,35 @@ curl -X POST http://localhost:4400/api/tests/finalize-test/YOUR_TEST_SESSION_ID 
 
 ### Version 1.0.0 (November 2025)
 
-- ✅ Initial MVP release
-- ✅ User authentication system
-- ✅ Practice test functionality
-- ✅ Interview management
-- ✅ Notes management
-- ✅ Performance analytics
-- ✅ Responsive UI/UX
-- ✅ Dark mode design
+**Initial MVP Release:**
+
+- ✅ User authentication system with JWT
+- ✅ Practice test functionality (Aptitude, Coding, HR)
+- ✅ Interview management with tracking
+- ✅ Notes management with tags
+- ✅ Performance analytics and reports
+- ✅ Responsive UI/UX (mobile-first)
+- ✅ Dark mode design with cyan accents
 - ✅ Profile management
 - ✅ Password change feature
 - ✅ Account deletion feature
+
+**Recent Updates (November 6, 2025):**
+
+- ✅ Added axios dependency (v1.7.9)
+- ✅ Integrated react-hot-toast (v2.4.1)
+- ✅ Updated logo to https://iili.io/KZZWvF1.png
+- ✅ Implemented toast notifications across all features
+- ✅ Added custom 404 Not Found page
+- ✅ Implemented ProtectedRoute component
+- ✅ Fixed authentication redirect loop
+- ✅ Reorganized navigation (Reports to sidebar)
+- ✅ Removed Settings button from sidebar
+- ✅ Fixed loading animation centering
+- ✅ Fixed interview cards grid alignment
+- ✅ Improved filter dropdowns UI (compact, mobile-friendly)
+- ✅ Removed all console logs from codebase
+- ✅ Enhanced mobile responsiveness
 
 ---
 
