@@ -1,11 +1,11 @@
 import React from "react";
 import { Routes, Route, useLocation } from "react-router";
-import Home from "./pages/home";
+import Home from "./pages/Home";
 
 import Sidebar from "./components/Sidebar";
 import Interviews from "./pages/Interviews";
 import { AppProvider } from "./context/AppContext";
-import Login from "./pages/login";
+import Login from "./pages/Login";
 import Report from "./pages/Report";
 import Welcome from "./pages/Welcome";
 import Practice from "./pages/Practice";
