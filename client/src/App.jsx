@@ -12,6 +12,8 @@ import Practice from "./pages/Practice";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import Notes from "./pages/Notes";
+import PracticeTest from "./pages/practiceTest";
+import AllReports from "./pages/AllReports";
 
 const AppContent = () => {
   const location = useLocation();
@@ -34,6 +36,8 @@ const AppContent = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/signup" element={<Register />} />
           <Route path="/notes" element={<Notes />} />
+          <Route path="/practice-test/:testId" element={<PracticeTest />} />
+          <Route path="/allreports" element={<AllReports />} />
         </Routes>
       </div>
     </div>

@@ -20,11 +20,19 @@ import {
 } from "lucide-react";
 
 const Profile = () => {
-  const { user, setUser, interviews } = useAppContext();
+  const { user, setUser, interviews, fetchUserData, testResults } =
+    useAppContext();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirmation, setDeleteConfirmation] = useState("");
+
+  useEffect(() => {
+    const initializePage = async () => {
+      await fetchUserData();
+    };
+    initializePage();
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
@@ -46,13 +54,10 @@ const Profile = () => {
           },
         }
       );
-      // Clear user data and tokens
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       navigate("/welcome");
-    } catch (error) {
-      console.error("Error deleting account:", error);
-    }
+    } catch (error) {}
   };
 
   const openDeleteModal = () => {
@@ -190,7 +195,9 @@ const Profile = () => {
                     </div>
                     <div>
                       <p className="text-sm text-gray-400">Tests Taken</p>
-                      <p className="text-xl font-bold text-white">0</p>
+                      <p className="text-xl font-bold text-white">
+                        {testResults.length}
+                      </p>
                     </div>
                   </div>
                 </div>

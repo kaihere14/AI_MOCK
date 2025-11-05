@@ -19,10 +19,18 @@ import {
 const Report = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { testResults, fetchTestResults, setActiveItem } = useAppContext();
+  const { testResults, fetchTestResults, setActiveItem, fetchUserData } =
+    useAppContext();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchTestResults();
+    const loadResults = async () => {
+      setIsLoading(true);
+      await fetchUserData();
+      await fetchTestResults();
+      setIsLoading(false);
+    };
+    loadResults();
   }, []);
 
   const reportData = testResults.find((result) => result._id === id);
@@ -53,6 +61,17 @@ const Report = () => {
     });
   };
 
+  if (isLoading) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center bg-black">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-400">Loading test results...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!reportData) {
     return (
       <div className="w-full h-screen flex items-center justify-center bg-black">
@@ -62,6 +81,37 @@ const Report = () => {
   }
 
   const wrongAnswers = reportData.total - reportData.correct;
+
+  const getAreasToFocus = () => {
+    const areas = [];
+    const accuracy = reportData.accuracy;
+
+    if (reportData.weakTopics && reportData.weakTopics.length > 0) {
+      return reportData.weakTopics;
+    }
+
+    if (accuracy < 40) {
+      areas.push("Fundamental Concepts - Review basic concepts thoroughly");
+      areas.push("Time Management - Practice solving questions faster");
+      areas.push("Problem-Solving Skills - Work on analytical thinking");
+    } else if (accuracy < 60) {
+      areas.push("Intermediate Concepts - Strengthen your understanding");
+      areas.push("Practice More Questions - Increase your question bank");
+      areas.push("Speed and Accuracy - Balance both aspects");
+    } else if (accuracy < 80) {
+      areas.push("Advanced Topics - Focus on complex problems");
+      areas.push("Edge Cases - Practice tricky scenarios");
+      areas.push("Consistency - Maintain regular practice");
+    } else if (accuracy < 100) {
+      areas.push("Minor Mistakes - Review questions you got wrong");
+      areas.push("Attention to Detail - Double-check your answers");
+      areas.push("Time Optimization - Try to solve faster");
+    }
+
+    return areas;
+  };
+
+  const areasToFocus = getAreasToFocus();
 
   return (
     <div className="w-full min-h-screen bg-black text-white p-8">
@@ -94,7 +144,7 @@ const Report = () => {
             <div className="flex items-center justify-between mb-2">
               <Award className="w-8 h-8 text-green-400" />
               <span className="text-3xl font-bold text-green-400">
-                {reportData.accuracy}%
+                {Number(reportData.accuracy).toFixed(2)}%
               </span>
             </div>
             <p className="text-gray-300 font-medium">Overall Score</p>
@@ -104,7 +154,7 @@ const Report = () => {
             <div className="flex items-center justify-between mb-2">
               <Target className="w-8 h-8 text-blue-400" />
               <span className="text-3xl font-bold text-blue-400">
-                {reportData.accuracy}%
+                {Number(reportData.accuracy).toFixed(2)}%
               </span>
             </div>
             <p className="text-gray-300 font-medium">Accuracy</p>
@@ -215,7 +265,7 @@ const Report = () => {
                   </div>
                   <div className="text-right">
                     <span className="text-xs font-semibold inline-block text-green-400">
-                      {reportData.accuracy}%
+                      {Number(reportData.accuracy).toFixed(2)}%
                     </span>
                   </div>
                 </div>
@@ -247,24 +297,24 @@ const Report = () => {
               <h3 className="text-lg font-medium text-gray-300">
                 Areas to Focus
               </h3>
-              {reportData.weakTopics && reportData.weakTopics.length > 0 ? (
+              {areasToFocus.length > 0 ? (
                 <div className="space-y-2 flex-1">
-                  {reportData.weakTopics.map((topic, index) => (
+                  {areasToFocus.map((topic, index) => (
                     <div
                       key={index}
                       className="flex items-center gap-3 p-3 bg-yellow-900/20 border border-yellow-700/30 rounded-lg"
                     >
                       <AlertCircle className="w-5 h-5 text-yellow-400 shrink-0" />
-                      <span className="text-gray-300">{topic}</span>
+                      <span className="text-gray-300 text-sm">{topic}</span>
                     </div>
                   ))}
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center flex-1 bg-green-900/10 border border-green-700/30 rounded-lg p-6 min-h-[200px]">
                   <CheckCircle2 className="w-12 h-12 text-green-400 mb-3" />
-                  <p className="text-green-400 font-medium">No Weak Topics!</p>
+                  <p className="text-green-400 font-medium">Perfect Score!</p>
                   <p className="text-gray-400 text-sm text-center mt-2">
-                    You've demonstrated strong knowledge across all areas
+                    Outstanding performance! Keep up the excellent work!
                   </p>
                 </div>
               )}
@@ -287,7 +337,7 @@ const Report = () => {
                 <div>
                   <div className="text-sm text-gray-400">Success Rate</div>
                   <div className="text-2xl font-bold text-cyan-400">
-                    {((reportData.correct / reportData.total) * 100).toFixed(1)}
+                    {((reportData.correct / reportData.total) * 100).toFixed(2)}
                     %
                   </div>
                 </div>

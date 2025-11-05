@@ -38,7 +38,10 @@ const Home = () => {
   useEffect(() => {
     const checkAuth = async () => {
       await fetchUserData();
-      if (!localStorage.getItem("accessToken")) {
+      if (
+        !localStorage.getItem("accessToken") &&
+        !localStorage.getItem("refreshToken")
+      ) {
         navigate("/welcome");
       } else {
         fetchInterviews();
@@ -100,7 +103,6 @@ const Home = () => {
         setInterviews(updatedInterviews);
         handleCloseModal();
       } catch (error) {
-        console.error("Error deleting interview:", error);
         alert("Failed to delete interview. Please try again.");
       }
     }
@@ -130,11 +132,18 @@ const Home = () => {
         <Card
           title="Latest Score"
           count={
-            `${testResults?.[testResults.length - 1]?.accuracy || 0} % ` ||
-            "N/A"
+            testResults?.[testResults.length - 1]?.accuracy
+              ? `${Number(testResults[testResults.length - 1].accuracy).toFixed(
+                  2
+                )}%`
+              : "N/A"
           }
           buttonText="View Report"
-          buttonLink={`/report/${testResults?.[testResults.length - 1]?._id}`}
+          buttonLink={
+            testResults?.[testResults.length - 1]?._id
+              ? `/report/${testResults[testResults.length - 1]._id}`
+              : "/allreports"
+          }
         />
       </div>
 
@@ -197,26 +206,71 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="flex flex-wrap px-4 sm:px-6 md:px-10 lg:px-20 gap-4 sm:gap-6 lg:gap-10 mb-6">
-        {interviews && interviews.length === 0 && (
-          <p className="text-gray-400">No interviews found.</p>
-        )}
-        {interviews &&
-          interviews
-            .slice(0, 3)
-            .map((interview, index) => (
-              <InterviewCard
-                key={interview.id}
-                imageSrc={interview.imageSrc || image[index]}
-                title={interview.role}
-                company={interview.companyName}
-                date={interview.date || "15 Dec 2023"}
-                salary={`$${interview.salary}`}
-                tags={interview.tag}
-                onClick={() => handleInterviewClick(interview)}
-              />
-            ))}
-      </div>
+      {interviews && interviews.length === 0 ? (
+        <div className="flex flex-col items-center justify-center px-4 sm:px-6 md:px-10 lg:px-20 py-16 sm:py-20">
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 sm:p-12 text-center max-w-lg w-full">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-6 bg-gradient-to-br from-cyan-500/10 to-blue-600/10 rounded-2xl flex items-center justify-center border border-cyan-500/20">
+              <svg
+                className="w-10 h-10 sm:w-12 sm:h-12 text-cyan-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                />
+              </svg>
+            </div>
+            <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">
+              No Interviews Yet
+            </h3>
+            <p className="text-gray-400 mb-6 text-sm sm:text-base">
+              Start tracking your interview journey by adding your first
+              interview
+            </p>
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="w-full sm:w-auto flex cursor-pointer items-center justify-center gap-2 bg-gradient-to-r from-pink-400 to-blue-400 text-white px-6 sm:px-8 py-3 rounded-xl hover:from-pink-500 hover:to-blue-500 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold mx-auto"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2.5}
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              <span>Add Your First Interview</span>
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-wrap px-4 sm:px-6 md:px-10 lg:px-20 gap-4 sm:gap-6 lg:gap-10 mb-6">
+          {interviews &&
+            interviews
+              .slice(0, 3)
+              .map((interview, index) => (
+                <InterviewCard
+                  key={interview.id}
+                  imageSrc={interview.imageSrc || image[index]}
+                  title={interview.role}
+                  company={interview.companyName}
+                  date={interview.date || "15 Dec 2023"}
+                  salary={`$${interview.salary}`}
+                  tags={interview.tag}
+                  onClick={() => handleInterviewClick(interview)}
+                />
+              ))}
+        </div>
+      )}
 
       {interviews && interviews.length > 3 && (
         <div className="flex justify-center px-4 pb-10">
