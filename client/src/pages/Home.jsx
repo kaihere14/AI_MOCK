@@ -54,10 +54,10 @@ const Home = () => {
 
   if (isAuthChecking) {
     return (
-      <div className="w-screen h-screen flex items-center justify-center bg-black">
+      <div className="fixed inset-0 w-full h-full flex items-center justify-center bg-black z-50">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-400">Loading...</p>
+          <p className="text-gray-400 text-lg">Loading...</p>
         </div>
       </div>
     );
