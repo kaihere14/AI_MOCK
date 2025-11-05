@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import axios from "axios";
 import { useAppContext } from "../context/AppContext";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -33,7 +34,6 @@ const Login = () => {
         `${import.meta.env.VITE_BACKEND_URL}/api/users/login`,
         formData
       );
-      console.log(response.data);
 
       // Set default avatar if user doesn't have one
       localStorage.setItem("accessToken", response.data.accessToken);
@@ -47,13 +47,14 @@ const Login = () => {
 
       setUser(userData);
       setActiveItem("Dashboard");
+      toast.success("Welcome back! Login successful.");
       navigate("/");
     } catch (err) {
-      console.error("Login error:", err);
-      setError(
+      const errorMessage =
         err.response?.data?.message ||
-          "Login failed. Please check your credentials and try again."
-      );
+        "Login failed. Please check your credentials and try again.";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }

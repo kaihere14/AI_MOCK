@@ -5,13 +5,14 @@ import {
   Code,
   FileText,
   User,
-  Settings,
   LogOut,
   Menu,
   X,
+  BarChart3,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
+import toast from "react-hot-toast";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ const Sidebar = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     updateActiveItem("Dashboard");
+    toast.success("Logged out successfully");
     navigate("/welcome");
     setIsMobileMenuOpen(false);
   };
@@ -183,6 +185,30 @@ const Sidebar = () => {
             </button>
 
             <button
+              onClick={() => handleMenuClick("Reports", "/allreports")}
+              className={`w-full flex items-center cursor-pointer gap-3 px-3 py-3 rounded-lg mb-1 transition-colors ${
+                activeItem === "Reports"
+                  ? "text-white"
+                  : "text-white hover:text-white"
+              }`}
+              style={{
+                backgroundColor:
+                  activeItem === "Reports" ? "#1e2327" : "transparent",
+              }}
+              onMouseEnter={(e) => {
+                if (activeItem !== "Reports")
+                  e.currentTarget.style.backgroundColor = "#1e2327";
+              }}
+              onMouseLeave={(e) => {
+                if (activeItem !== "Reports")
+                  e.currentTarget.style.backgroundColor = "transparent";
+              }}
+            >
+              <BarChart3 size={20} />
+              <span className="font-normal">Reports</span>
+            </button>
+
+            <button
               onClick={() => handleMenuClick("Profile", "/profile")}
               className={`w-full flex items-center cursor-pointer gap-3 px-3 py-3 rounded-lg mb-1 transition-colors ${
                 activeItem === "Profile"
@@ -212,23 +238,6 @@ const Sidebar = () => {
             className="px-3 py-4 border-t"
             style={{ borderColor: "#2a2e32" }}
           >
-            <button
-              onClick={() => {
-                updateActiveItem("Settings");
-                setIsMobileMenuOpen(false);
-              }}
-              className="w-full cursor-pointer flex items-center gap-3 px-3 py-3 rounded-lg mb-1 text-white hover:text-white transition-colors"
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#1e2327")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "transparent")
-              }
-            >
-              <Settings size={20} />
-              <span className="font-normal">Settings</span>
-            </button>
-
             <button
               onClick={() => handleLogout()}
               className="w-full cursor-pointer flex items-center gap-3 px-3 py-3 rounded-lg mb-1 text-white hover:text-white transition-colors"

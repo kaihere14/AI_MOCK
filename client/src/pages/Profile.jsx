@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 import { Navbar } from "../components/Navbar";
 import axios from "axios";
+import toast from "react-hot-toast";
 import {
   User,
   Mail,
@@ -45,10 +46,12 @@ const Profile = () => {
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    toast.success("Logged out successfully");
     navigate("/welcome");
   };
   const handleDeleteAccount = async () => {
     if (deleteConfirmation !== "DELETE") {
+      toast.error("Please type DELETE to confirm");
       return;
     }
 
@@ -64,8 +67,11 @@ const Profile = () => {
       );
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
+      toast.success("Account deleted successfully");
       navigate("/welcome");
-    } catch (error) {}
+    } catch (error) {
+      toast.error("Failed to delete account. Please try again.");
+    }
   };
 
   const openDeleteModal = () => {

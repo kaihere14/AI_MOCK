@@ -3,6 +3,7 @@ import { useAppContext } from "../context/AppContext";
 import AddNotes from "../components/addNotes";
 import { Navbar } from "../components/Navbar";
 import axios from "axios";
+import toast from "react-hot-toast";
 import {
   Search,
   Plus,
@@ -202,9 +203,10 @@ const Notes = () => {
           (note) => note._id !== noteId && note.id !== noteId
         );
         setNotes(updatedNotes);
+        toast.success("Note deleted successfully");
         handleCloseModal();
       } catch (error) {
-        alert("Failed to delete note. Please try again.");
+        toast.error("Failed to delete note. Please try again.");
       }
     }
   };
@@ -212,6 +214,8 @@ const Notes = () => {
   const handleNoteCreated = (newNote) => {
     setNotes([...notes, newNote]);
     fetchNotes();
+    setShowCreateModal(false);
+    toast.success("Note created successfully");
   };
 
   const formatDate = (dateString) => {

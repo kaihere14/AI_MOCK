@@ -6,6 +6,7 @@ import axios from "axios";
 import { Navbar } from "../components/Navbar";
 import { useAppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import {
   X,
   Trash2,
@@ -24,7 +25,6 @@ const Home = () => {
 
   const navigate = useNavigate();
   const {
-    isLoggedIn,
     isAuthChecking,
     fetchUserData,
     fetchInterviews,
@@ -36,20 +36,13 @@ const Home = () => {
   } = useAppContext();
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const loadData = async () => {
       await fetchUserData();
-      if (
-        !localStorage.getItem("accessToken") &&
-        !localStorage.getItem("refreshToken")
-      ) {
-        navigate("/welcome");
-      } else {
-        fetchInterviews();
-        fetchTestResults();
-      }
+      fetchInterviews();
+      fetchTestResults();
     };
 
-    checkAuth();
+    loadData();
   }, []);
 
   if (isAuthChecking) {
@@ -61,10 +54,6 @@ const Home = () => {
         </div>
       </div>
     );
-  }
-
-  if (!isLoggedIn) {
-    return navigate("/welcome");
   }
 
   const image = [
@@ -101,9 +90,10 @@ const Home = () => {
             interview._id !== interviewId && interview.id !== interviewId
         );
         setInterviews(updatedInterviews);
+        toast.success("Interview deleted successfully");
         handleCloseModal();
       } catch (error) {
-        alert("Failed to delete interview. Please try again.");
+        toast.error("Failed to delete interview. Please try again.");
       }
     }
   };
@@ -111,6 +101,7 @@ const Home = () => {
   const handleInterviewCreated = (newInterview) => {
     setInterviews([...interviews, newInterview]);
     fetchInterviews();
+    toast.success("Interview created successfully");
   };
 
   return (
@@ -253,7 +244,7 @@ const Home = () => {
           </div>
         </div>
       ) : (
-        <div className="flex flex-wrap px-4 sm:px-6 md:px-10 lg:px-20 gap-4 sm:gap-6 lg:gap-10 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 px-4 sm:px-6 md:px-10 lg:px-20 gap-4 sm:gap-6 mb-6">
           {interviews &&
             interviews
               .slice(0, 3)

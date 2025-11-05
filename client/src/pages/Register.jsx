@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, User } from "lucide-react";
 import axios from "axios";
 import { useAppContext } from "../context/AppContext";
+import toast from "react-hot-toast";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -31,11 +32,13 @@ const Register = () => {
     // Validation
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
 
     if (formData.password.length < 6) {
       setError("Password must be at least 6 characters");
+      toast.error("Password must be at least 6 characters");
       return;
     }
 
@@ -48,7 +51,6 @@ const Register = () => {
           password: formData.password,
         }
       );
-      console.log(response.data);
 
       // Set tokens and user data
       localStorage.setItem("accessToken", response.data.accessToken);
@@ -64,12 +66,13 @@ const Register = () => {
       localStorage.setItem("refreshToken", response.data.refreshToken);
       setIsLoggedIn(true);
       setActiveItem("Dashboard");
+      toast.success("Account created successfully! Welcome to PrepDash.");
       navigate("/");
     } catch (err) {
-      console.error("Registration error:", err);
-      setError(
-        err.response?.data?.message || "Registration failed. Please try again."
-      );
+      const errorMessage =
+        err.response?.data?.message || "Registration failed. Please try again.";
+      setError(errorMessage);
+      toast.error(errorMessage);
     }
   };
 
