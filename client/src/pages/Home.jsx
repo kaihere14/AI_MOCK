@@ -166,8 +166,8 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
-          <select className="w-full sm:w-auto px-4 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-400 text-xs sm:text-sm focus:outline-none focus:border-cyan-500 focus:text-white transition-all duration-300 cursor-pointer">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-6">
+          <select className="flex-1 sm:flex-none min-w-[120px] px-3 sm:px-4 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-400 text-xs sm:text-sm focus:outline-none focus:border-cyan-500 focus:text-white transition-all duration-300 cursor-pointer">
             <option value="">All Roles</option>
             <option value="frontend">Frontend Developer</option>
             <option value="backend">Backend Engineer</option>
@@ -177,7 +177,7 @@ const Home = () => {
             <option value="data">Data Scientist</option>
           </select>
 
-          <select className="w-full sm:w-auto px-4 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-400 text-xs sm:text-sm focus:outline-none focus:border-cyan-500 focus:text-white transition-all duration-300 cursor-pointer">
+          <select className="flex-1 sm:flex-none min-w-[120px] px-3 sm:px-4 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-400 text-xs sm:text-sm focus:outline-none focus:border-cyan-500 focus:text-white transition-all duration-300 cursor-pointer">
             <option value="">All Time</option>
             <option value="today">Today</option>
             <option value="week">This Week</option>
@@ -186,7 +186,7 @@ const Home = () => {
             <option value="year">This Year</option>
           </select>
 
-          <select className="w-full sm:w-auto px-4 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-400 text-xs sm:text-sm focus:outline-none focus:border-cyan-500 focus:text-white transition-all duration-300 cursor-pointer">
+          <select className="flex-1 sm:flex-none min-w-[120px] px-3 sm:px-4 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-400 text-xs sm:text-sm focus:outline-none focus:border-cyan-500 focus:text-white transition-all duration-300 cursor-pointer">
             <option value="">All Packages</option>
             <option value="0-50">$0 - $50k</option>
             <option value="50-100">$50k - $100k</option>
