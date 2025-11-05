@@ -16,11 +16,11 @@ import { useAppContext } from "../context/AppContext";
 
 const Welcome = () => {
   const navigate = useNavigate();
-  const {isLoggedIn} = useAppContext();
+  const { isLoggedIn } = useAppContext();
 
   useEffect(() => {
     // Check if user is already logged in
-    
+
     if (isLoggedIn) {
       navigate("/");
     }
@@ -75,7 +75,7 @@ const Welcome = () => {
               <Sparkles className="w-6 h-6 text-white" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-              AI Mock
+              PrepDash
             </span>
           </div>
           <button
@@ -265,11 +265,11 @@ const Welcome = () => {
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-              AI Mock
+              PrepDash
             </span>
           </div>
           <div className="text-gray-400 text-sm">
-            © 2025 AI Mock. All rights reserved.
+            © 2025 PrepDash. All rights reserved.
           </div>
           <div className="flex items-center gap-6 text-gray-400 text-sm">
             <a href="#" className="hover:text-cyan-400 transition-colors">
