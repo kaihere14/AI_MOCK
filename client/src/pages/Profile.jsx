@@ -26,6 +26,14 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirmation, setDeleteConfirmation] = useState("");
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [passwordData, setPasswordData] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [passwordError, setPasswordError] = useState("");
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
 
   useEffect(() => {
     const initializePage = async () => {
@@ -68,6 +76,84 @@ const Profile = () => {
   const closeDeleteModal = () => {
     setShowDeleteModal(false);
     setDeleteConfirmation("");
+  };
+
+  const openPasswordModal = () => {
+    setShowPasswordModal(true);
+    setPasswordData({
+      oldPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    });
+    setPasswordError("");
+  };
+
+  const closePasswordModal = () => {
+    setShowPasswordModal(false);
+    setPasswordData({
+      oldPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    });
+    setPasswordError("");
+  };
+
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setPasswordData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    setPasswordError("");
+  };
+
+  const handleChangePassword = async () => {
+    if (
+      !passwordData.oldPassword ||
+      !passwordData.newPassword ||
+      !passwordData.confirmPassword
+    ) {
+      setPasswordError("All fields are required");
+      return;
+    }
+
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      setPasswordError("New passwords do not match");
+      return;
+    }
+
+    if (passwordData.newPassword.length < 6) {
+      setPasswordError("Password must be at least 6 characters");
+      return;
+    }
+
+    setIsChangingPassword(true);
+    const accessToken = localStorage.getItem("accessToken");
+
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/change-password`,
+        {
+          oldPassword: passwordData.oldPassword,
+          newPassword: passwordData.newPassword,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      closePasswordModal();
+      alert("Password changed successfully!");
+    } catch (error) {
+      setPasswordError(
+        error.response?.data?.message ||
+          "Failed to change password. Please try again."
+      );
+    } finally {
+      setIsChangingPassword(false);
+    }
   };
 
   const formatDate = (dateString) => {
@@ -315,7 +401,10 @@ const Profile = () => {
                       Update your account password
                     </p>
                   </div>
-                  <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors text-sm font-semibold">
+                  <button
+                    onClick={openPasswordModal}
+                    className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors text-sm font-semibold"
+                  >
                     Change
                   </button>
                 </div>
@@ -409,6 +498,100 @@ const Profile = () => {
                 className="flex-1 px-4 py-2.5 sm:py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-red-500 text-sm sm:text-base"
               >
                 Delete Forever
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Change Password Modal */}
+      {showPasswordModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-900 border border-cyan-500/30 rounded-xl max-w-md w-full p-4 sm:p-6 shadow-2xl">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-cyan-500/10 rounded-lg flex items-center justify-center">
+                  <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-400" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold text-cyan-400">
+                  Change Password
+                </h3>
+              </div>
+              <button
+                onClick={closePasswordModal}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Error Message */}
+            {passwordError && (
+              <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">
+                {passwordError}
+              </div>
+            )}
+
+            {/* Form */}
+            <div className="space-y-4">
+              <div>
+                <label className="block text-gray-400 text-sm mb-2">
+                  Old Password <span className="text-red-400">*</span>
+                </label>
+                <input
+                  type="password"
+                  name="oldPassword"
+                  value={passwordData.oldPassword}
+                  onChange={handlePasswordChange}
+                  placeholder="Enter your current password"
+                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-400 text-sm mb-2">
+                  New Password <span className="text-red-400">*</span>
+                </label>
+                <input
+                  type="password"
+                  name="newPassword"
+                  value={passwordData.newPassword}
+                  onChange={handlePasswordChange}
+                  placeholder="Enter new password (min 6 characters)"
+                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-400 text-sm mb-2">
+                  Confirm New Password <span className="text-red-400">*</span>
+                </label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={passwordData.confirmPassword}
+                  onChange={handlePasswordChange}
+                  placeholder="Confirm your new password"
+                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                />
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 mt-6">
+              <button
+                onClick={closePasswordModal}
+                className="flex-1 px-4 py-2.5 sm:py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors font-semibold text-sm sm:text-base"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleChangePassword}
+                disabled={isChangingPassword}
+                className="flex-1 px-4 py-2.5 sm:py-3 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+              >
+                {isChangingPassword ? "Changing..." : "Change Password"}
               </button>
             </div>
           </div>
