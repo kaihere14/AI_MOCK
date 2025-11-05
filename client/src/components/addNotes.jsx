@@ -23,7 +23,7 @@ const AddNotes = ({ onClose, onNoteCreated }) => {
 
   const handleAddTag = (e) => {
     if (e.key === "Enter") {
-      e.preventDefault(); // Prevent form submission
+      e.preventDefault();
       const trimmedTag = formData.tag.trim();
 
       if (trimmedTag && !tags.includes(trimmedTag)) {
@@ -45,7 +45,6 @@ const AddNotes = ({ onClose, onNoteCreated }) => {
     setError("");
     setIsSubmitting(true);
 
-    // Validation
     if (!formData.title || !formData.content) {
       setError("Please fill in all required fields");
       setIsSubmitting(false);
@@ -68,12 +67,10 @@ const AddNotes = ({ onClose, onNoteCreated }) => {
         }
       );
 
-      // Success callback
       if (onNoteCreated) {
         onNoteCreated(response.data);
       }
 
-      // Reset form
       setFormData({
         title: "",
         content: "",
@@ -81,7 +78,6 @@ const AddNotes = ({ onClose, onNoteCreated }) => {
       });
       setTags([]);
 
-      // Close modal
       if (onClose) {
         onClose();
       }
@@ -96,13 +92,9 @@ const AddNotes = ({ onClose, onNoteCreated }) => {
     }
   };
 
-
-  
-
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-gray-900 border border-gray-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
         <div className="sticky top-0 bg-gray-900 border-b border-gray-800 p-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold text-white">Create New Note</h2>
           <button
@@ -113,7 +105,6 @@ const AddNotes = ({ onClose, onNoteCreated }) => {
           </button>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="p-6">
           {error && (
             <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400">
@@ -121,7 +112,6 @@ const AddNotes = ({ onClose, onNoteCreated }) => {
             </div>
           )}
 
-          {/* Title */}
           <div className="mb-6">
             <label className="flex items-center gap-2 text-gray-400 text-sm font-semibold mb-2">
               <FileText className="w-4 h-4 text-cyan-400" />
@@ -138,7 +128,6 @@ const AddNotes = ({ onClose, onNoteCreated }) => {
             />
           </div>
 
-          {/* Content */}
           <div className="mb-6">
             <label className="flex items-center gap-2 text-gray-400 text-sm font-semibold mb-2">
               <AlignLeft className="w-4 h-4 text-cyan-400" />
@@ -155,7 +144,6 @@ const AddNotes = ({ onClose, onNoteCreated }) => {
             />
           </div>
 
-          {/* Tags */}
           <div className="mb-6">
             <label className="flex items-center gap-2 text-gray-400 text-sm font-semibold mb-2">
               <Tag className="w-4 h-4 text-cyan-400" />
@@ -174,7 +162,6 @@ const AddNotes = ({ onClose, onNoteCreated }) => {
               Press Enter to add a tag
             </p>
 
-            {/* Display Tags */}
             {tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-3">
                 {tags.map((tag, index) => (
@@ -196,7 +183,6 @@ const AddNotes = ({ onClose, onNoteCreated }) => {
             )}
           </div>
 
-          {/* Buttons */}
           <div className="flex gap-4 pt-4">
             <button
               type="button"

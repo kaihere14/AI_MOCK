@@ -1,11 +1,8 @@
 import React, { createContext, useContext, useState } from "react";
 import axios from "axios";
-import { set } from "mongoose";
 
-// Create the context
 const AppContext = createContext();
 
-// Custom hook to use the context
 export const useAppContext = () => {
   const context = useContext(AppContext);
   if (!context) {
@@ -14,7 +11,6 @@ export const useAppContext = () => {
   return context;
 };
 
-// Provider component
 export const AppProvider = ({ children }) => {
   const [activeItem, setActiveItem] = useState("Dashboard");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -30,7 +26,6 @@ export const AppProvider = ({ children }) => {
     role: "user",
   });
 
-  // Function to update active menu item
   const updateActiveItem = (item) => {
     setActiveItem(item);
   };
@@ -53,7 +48,7 @@ export const AppProvider = ({ children }) => {
           },
         }
       );
-      // Set default avatar if user doesn't have one
+
       const userData = {
         ...response.data,
         avatar:
@@ -115,14 +110,12 @@ export const AppProvider = ({ children }) => {
           },
         }
       );
-      console.log("Notes:", response.data.notes);
       setNotes(response.data.notes);
     } catch (error) {
       console.error("Error fetching notes:", error);
     }
   };
 
-  // Function to update user data
   const updateUser = (userData) => {
     setUser((prev) => ({ ...prev, ...userData }));
   };
