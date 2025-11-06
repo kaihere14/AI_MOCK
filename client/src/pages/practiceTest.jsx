@@ -12,6 +12,7 @@ const PracticeTest = () => {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [flaggedQuestions, setFlaggedQuestions] = useState(new Set());
   const [isLoadingTest, setIsLoadingTest] = useState(false);
+  const [isLoadingNext, setIsLoadingNext] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState({
     hours: 0,
     minutes: 0,
@@ -100,6 +101,7 @@ const PracticeTest = () => {
   };
 
   const handleNext = async () => {
+    setIsLoadingNext(true);
     const currentAnswer = selectedAnswers[currentQuestionIndex];
 
     if (currentAnswer) {
@@ -112,6 +114,7 @@ const PracticeTest = () => {
     ) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
+    setIsLoadingNext(false);
   };
 
   const handleFlagForReview = () => {
@@ -393,12 +396,22 @@ const PracticeTest = () => {
               onClick={handleNext}
               disabled={
                 currentQuestionIndex === totalQuestions - 1 ||
-                !selectedAnswers[currentQuestionIndex]
+                !selectedAnswers[currentQuestionIndex] ||
+                isLoadingNext
               }
               className="flex items-center gap-2 px-4 sm:px-6 py-2 bg-gradient-to-r from-pink-400 to-blue-400 hover:from-pink-500 hover:to-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-all duration-300 text-sm sm:text-base font-semibold"
             >
-              <span>Next</span>
-              <ChevronRight className="w-5 h-5" />
+              {isLoadingNext ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Saving...</span>
+                </>
+              ) : (
+                <>
+                  <span>Next</span>
+                  <ChevronRight className="w-5 h-5" />
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -505,12 +518,22 @@ const PracticeTest = () => {
             onClick={handleNext}
             disabled={
               currentQuestionIndex === totalQuestions - 1 ||
-              !selectedAnswers[currentQuestionIndex]
+              !selectedAnswers[currentQuestionIndex] ||
+              isLoadingNext
             }
             className="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-pink-400 to-blue-400 hover:from-pink-500 hover:to-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-all duration-300 font-semibold text-sm flex-1"
           >
-            <span>Next</span>
-            <ChevronRight className="w-4 h-4" />
+            {isLoadingNext ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span>Saving...</span>
+              </>
+            ) : (
+              <>
+                <span>Next</span>
+                <ChevronRight className="w-4 h-4" />
+              </>
+            )}
           </button>
 
           {/* Timer Display - Compact */}
