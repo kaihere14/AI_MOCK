@@ -9,6 +9,9 @@ const Practice = () => {
   const [aptitudeDifficulty, setAptitudeDifficulty] = useState("Medium");
   const [codingDifficulty, setCodingDifficulty] = useState("Medium");
   const [hrDifficulty, setHrDifficulty] = useState("Medium");
+  const [isLoadingAptitude, setIsLoadingAptitude] = useState(false);
+  const [isLoadingCoding, setIsLoadingCoding] = useState(false);
+  const [isLoadingHR, setIsLoadingHR] = useState(false);
   const navigate = useNavigate();
   const { fetchUserData } = useAppContext();
 
@@ -20,6 +23,7 @@ const Practice = () => {
   }, []);
 
   const handleStartAptitude = async () => {
+    setIsLoadingAptitude(true);
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/tests/create-test`,
@@ -34,10 +38,13 @@ const Practice = () => {
         }
       );
       navigate(`/practice-test/${response.data.testSessionId}`);
-    } catch (error) {}
+    } catch (error) {
+      setIsLoadingAptitude(false);
+    }
   };
 
   const handleStartCoding = async () => {
+    setIsLoadingCoding(true);
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/tests/create-test`,
@@ -52,10 +59,13 @@ const Practice = () => {
         }
       );
       navigate(`/practice-test/${response.data.testSessionId}`);
-    } catch (error) {}
+    } catch (error) {
+      setIsLoadingCoding(false);
+    }
   };
 
   const handleStartHR = async () => {
+    setIsLoadingHR(true);
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/tests/create-test`,
@@ -70,7 +80,9 @@ const Practice = () => {
         }
       );
       navigate(`/practice-test/${response.data.testSessionId}`);
-    } catch (error) {}
+    } catch (error) {
+      setIsLoadingHR(false);
+    }
   };
 
   return (
@@ -149,9 +161,17 @@ const Practice = () => {
 
             <button
               onClick={handleStartAptitude}
-              className="w-full py-3 bg-gradient-to-r from-pink-400 to-blue-400 hover:from-pink-500 hover:to-blue-500 text-white rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base"
+              disabled={isLoadingAptitude}
+              className="w-full py-3 bg-gradient-to-r from-pink-400 to-blue-400 hover:from-pink-500 hover:to-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base flex items-center justify-center gap-2"
             >
-              Start Practice
+              {isLoadingAptitude ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Loading Questions...</span>
+                </>
+              ) : (
+                "Start Practice"
+              )}
             </button>
           </div>
 
@@ -216,9 +236,17 @@ const Practice = () => {
 
             <button
               onClick={handleStartCoding}
-              className="w-full py-3 bg-gradient-to-r from-pink-400 to-blue-400 hover:from-pink-500 hover:to-blue-500 text-white rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base"
+              disabled={isLoadingCoding}
+              className="w-full py-3 bg-gradient-to-r from-pink-400 to-blue-400 hover:from-pink-500 hover:to-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base flex items-center justify-center gap-2"
             >
-              Start Practice
+              {isLoadingCoding ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Loading Questions...</span>
+                </>
+              ) : (
+                "Start Practice"
+              )}
             </button>
           </div>
 
@@ -283,9 +311,17 @@ const Practice = () => {
 
             <button
               onClick={handleStartHR}
-              className="w-full py-3 bg-gradient-to-r from-pink-400 to-blue-400 hover:from-pink-500 hover:to-blue-500 text-white rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base"
+              disabled={isLoadingHR}
+              className="w-full py-3 bg-gradient-to-r from-pink-400 to-blue-400 hover:from-pink-500 hover:to-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base flex items-center justify-center gap-2"
             >
-              Start Practice
+              {isLoadingHR ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Loading Questions...</span>
+                </>
+              ) : (
+                "Start Practice"
+              )}
             </button>
           </div>
         </div>
