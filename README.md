@@ -1,7 +1,7 @@
 
 # 🤖 AI_MOCK Project Overview
 
-AI_MOCK is a comprehensive full-stack application designed to provide an AI-driven mock interview experience. The platform enables users to practice their interview skills through simulated sessions, featuring a modern React frontend and a robust Express.js backend powered by MongoDB.
+AI_MOCK is a full-stack platform designed to simulate realistic AI-driven interview experiences. It leverages a modern React frontend and a robust Express.js backend to help users prepare for technical and behavioral interviews through interactive sessions and automated feedback.
 ## Header & Badges
 --------------------
 
@@ -11,14 +11,14 @@ AI_MOCK is a comprehensive full-stack application designed to provide an AI-driv
 
 ## 📝 Overview
 
-The AI_MOCK project aims to bridge the gap between preparation and performance by providing a realistic, interactive interview environment. Users can engage with AI-generated questions, receive feedback, and track their progress. The application leverages a decoupled architecture with a Vite-powered React client and a Node.js server.
+The AI_MOCK project provides an interactive environment for users to practice interview skills. By utilizing AI-generated questions and providing detailed performance analytics, the application helps candidates refine their responses. The architecture is split into a Vite-powered React client and a Node.js/Express server with MongoDB for data persistence.
 ## ✨ Features
 
-*   **User Authentication**: Secure account management for personalized interview tracking.
-*   **AI Mock Interviews**: Interactive sessions simulating real-world technical and behavioral interviews.
-*   **Dynamic Question Bank**: A diverse range of questions across various domains.
-*   **Feedback & Analytics**: Detailed notes and performance feedback to help users improve.
-*   **Session Management**: Create and manage multiple interview tests and notes.
+*   **AI-Powered Interviews**: Interactive sessions with dynamically generated questions.
+*   **User Authentication**: Secure management of user profiles and interview history.
+*   **Comprehensive Question Bank**: Diverse sets of technical and behavioral questions.
+*   **Performance Analytics**: Detailed feedback and notes on interview performance.
+*   **Session Management**: Tools to track, review, and manage multiple interview attempts.
 ## 💻 Tech Stack
 
 *   **Frontend**: React 19, Tailwind CSS 4, React Router 7, Axios
@@ -29,24 +29,25 @@ The AI_MOCK project aims to bridge the gap between preparation and performance b
 ## 📂 Project Structure
 
 
-├── client/                # React frontend application
-│   ├── src/components/    # Reusable UI components
-│   ├── src/context/       # React Context for state management
-│   ├── src/pages/         # Page-level components
-│   └── vercel.json        # Deployment configuration
-└── server/                # Express.js backend API
-    ├── src/controller/    # Request handlers
-    ├── src/models/        # MongoDB schemas
-    ├── src/routes/        # API endpoint definitions
-    └── src/middlewares/   # Custom middleware logic
+├── client/                # React frontend (Vite)
+│   ├── src/components/    # Shared UI components
+│   ├── src/context/       # Global state management
+│   ├── src/pages/         # Application views
+│   └── vercel.json        # Vercel deployment config
+└── server/                # Express.js backend
+    ├── src/controller/    # Business logic handlers
+    ├── src/models/        # MongoDB data schemas
+    ├── src/routes/        # API route definitions
+    ├── src/middlewares/   # Request processing logic
+    └── src/databases/     # Database connection setup
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-*   Node.js: ^18.0.0
-*   npm: ^8.0.0
-*   MongoDB: ^6.0.0
+*   Node.js (v18+)
+*   npm (v8+)
+*   MongoDB (v6+)
 
 ### Installation
 
@@ -55,11 +56,13 @@ The AI_MOCK project aims to bridge the gap between preparation and performance b
     git clone https://github.com/kaihere14/AI_MOCK.git
     cd AI_MOCK
     
-2.  **Install Server Dependencies**:
+
+2.  **Setup Server**:
     bash
     cd server && npm install
     
-3.  **Install Client Dependencies**:
+
+3.  **Setup Client**:
     bash
     cd ../client && npm install
     
@@ -76,12 +79,12 @@ MONGO_URI=mongodb://localhost:27017/ai_mock
 
 ### Running the Server
 1. Navigate to the server directory: `cd server`
-2. Start the development server: `npm run dev` (Runs on port 4400 by default)
+2. Start the backend: `npm run dev` (Default port: 4400)
 
 ### Running the Client
 1. Navigate to the client directory: `cd client`
-2. Start the Vite development server: `npm run dev`
-3. Open your browser at: `http://localhost:5173`
+2. Start the Vite dev server: `npm run dev`
+3. Access the app at: `http://localhost:5173`
 ## 📖 API Documentation
 
 ### Endpoints
@@ -92,7 +95,8 @@ MONGO_URI=mongodb://localhost:27017/ai_mock
 *   **Interviews**: `GET /api/interviews`, `POST /api/interviews`
 *   **Notes**: `GET /api/notes`, `POST /api/notes`
 
-### Sample Response (GET /api/users)
+### Sample User Response
+
 
 [
   {
@@ -105,19 +109,19 @@ MONGO_URI=mongodb://localhost:27017/ai_mock
 ## 🛠️ Development
 
 ### Environment Setup
-Ensure MongoDB is running locally or provide a valid `MONGO_URI` in the server configuration. The client uses Vite for fast hot-module replacement.
+Ensure a local MongoDB instance is active or provide a remote `MONGO_URI`. The frontend uses Vite for rapid development and hot reloading.
 
 ### Code Style
-*   Maintain consistent naming conventions for components in `client/src/components`.
-*   Follow the MVC pattern in the `server` directory (Models, Views/Routes, Controllers).
-*   Use the provided ESLint configuration in the client to ensure code quality.
+*   **Backend**: Follows the MVC (Model-View-Controller) pattern.
+*   **Frontend**: Functional components with React Hooks and Context API.
+*   **Linting**: ESLint is configured in the client directory to maintain code quality.
 ## 🌐 Deployment
 
 ### Client Deployment
-The client is optimized for deployment on **Vercel**. Use the `vercel.json` configuration for routing and build settings.
+The frontend is configured for **Vercel** via `vercel.json`. Ensure environment variables for the API base URL are set if applicable.
 
 ### Server Deployment
-The server can be deployed to any Node.js environment. Ensure that the `MONGO_URI` and `PORT` environment variables are correctly configured in your production environment.
+The backend can be hosted on any Node.js-compatible platform (e.g., Render, Railway, Heroku). Configure `MONGO_URI` and `PORT` in the production environment settings.
 ## Contributing
 ------------
 
